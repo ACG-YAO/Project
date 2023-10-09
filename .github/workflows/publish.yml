@@ -1,4 +1,4 @@
-name: Build and Deploy to ACG-YAO.github.io
+name: Build
 
 on:
   push:
@@ -17,39 +17,3 @@ jobs:
       run: |
         npm install
         npx vite build
-
-    - name: Set up SSH
-      env:
-        SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-      run: |
-        echo "$SSH_DEPLOY_KEY" > deploy_key
-        chmod 600 deploy_key
-        key_content=$(cat deploy_key)
-        echo ${#key_content}
-
-        eval "$(ssh-agent -s)"
-        ssh-add deploy_key
-        mkdir -p ~/.ssh
-        echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==">>~/.ssh/known_hosts
-
-    - name: Deploy to ACG-YAO.github.io
-      run: |
-        git config --unset-all http.https://github.com/.extraheader
-
-        # Navigate out of the current repository directory
-        cd ..
-
-        # Clone the GitHub pages repository
-        git clone git@github.com:ACG-YAO/ACG-YAO.github.io.git deploy
-
-        # Copy the built files from the main repository to the deploy directory
-        rsync -av --delete $GITHUB_WORKSPACE/dist/ deploy/
-
-        # Commit and push changes to ACG-YAO.github.io
-        cd deploy
-        git add .
-        git commit -m "Deployed using GitHub Actions"
-        git push origin master
-        # Cleanup
-        cd ..
-        rm -rf deploy
