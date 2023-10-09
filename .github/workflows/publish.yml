@@ -50,4 +50,5 @@ jobs:
         git commit -m "Deployed using GitHub Actions"
         git push origin master
         # Cleanup
+        cd ..
         rm -rf deploy
