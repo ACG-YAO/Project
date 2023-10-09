@@ -34,10 +34,11 @@ jobs:
 
     - name: Deploy to ACG-YAO.github.io
       run: |
+        git config --unset-all http.https://github.com/.extraheader
+
         # Navigate out of the current repository directory
         cd ..
 
-        git config --unset-all http.https://github.com/.extraheader
         # Clone the GitHub pages repository
         git clone git@github.com:ACG-YAO/ACG-YAO.github.io.git deploy
 
