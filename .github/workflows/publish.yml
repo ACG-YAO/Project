@@ -22,36 +22,29 @@ jobs:
       env:
         SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
       run: |
-
-        # Save private key to a file
         echo "$SSH_DEPLOY_KEY" > deploy_key
-        echo "$SSH_DEPLOY_KEY"
         chmod 600 deploy_key
-
-        # Add the key to the ssh-agent
         eval "$(ssh-agent -s)"
         ssh-add deploy_key
-
-        # Ensure ~/.ssh directory exists
         mkdir -p ~/.ssh
-
-        # Add GitHub to the list of known hosts to prevent prompts
         echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==">>~/.ssh/known_hosts
 
-    - name: Deploy to ACG-YAO.github.io using SSH
+    - name: Deploy to ACG-YAO.github.io
       run: |
-        # Configure Git
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        # Navigate out of the current repository directory
+        cd ..
 
-        # Clone the deployment repository using SSH
-        git clone https://github.com/ACG-YAO/ACG-YAO.github.io.git deploy
+        # Clone the GitHub pages repository
+        git clone git@github.com:ACG-YAO/ACG-YAO.github.io.git deploy
 
-        # Copy the built files
-        rsync -av --delete dist/ deploy/
+        # Copy the built files from the main repository to the deploy directory
+        rsync -av --delete $GITHUB_WORKSPACE/dist/ deploy/
 
-        # Commit and push changes
+        # Commit and push changes to ACG-YAO.github.io
         cd deploy
         git add .
         git commit -m "Deployed using GitHub Actions"
         git push origin master
+
+        # Cleanup
+        rm -rf deploy
