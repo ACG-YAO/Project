@@ -22,9 +22,10 @@ jobs:
       env:
         SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
       run: |
-      
+
         # Save private key to a file
         echo "$SSH_DEPLOY_KEY" > deploy_key
+        echo "$SSH_DEPLOY_KEY"
         chmod 600 deploy_key
 
         # Add the key to the ssh-agent
