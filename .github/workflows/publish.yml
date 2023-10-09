@@ -26,7 +26,7 @@ jobs:
         chmod 600 deploy_key
         key_content=$(cat deploy_key)
         echo ${#key_content}
-        
+
         eval "$(ssh-agent -s)"
         ssh-add deploy_key
         mkdir -p ~/.ssh
@@ -37,6 +37,7 @@ jobs:
         # Navigate out of the current repository directory
         cd ..
 
+        git config --unset-all http.https://github.com/.extraheader
         # Clone the GitHub pages repository
         git clone git@github.com:ACG-YAO/ACG-YAO.github.io.git deploy
 
