@@ -11,7 +11,7 @@ scene.add(hemiLight);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-let pumpkin; // This will store our pumpkin model
+let pumpkin; 
 
 // Load the pumpkin model
 const loader = new GLTFLoader();
