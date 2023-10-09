@@ -24,4 +24,4 @@ jobs:
         repository: ACG-YAO/ACG-YAO.github.io
         branch: master
         folder: dist
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.DEPLOY_TOKEN }}
