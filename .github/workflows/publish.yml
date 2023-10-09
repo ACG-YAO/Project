@@ -24,7 +24,9 @@ jobs:
       run: |
         echo "$SSH_DEPLOY_KEY" > deploy_key
         chmod 600 deploy_key
-        echo ${#(cat deploy_key)} 
+        key_content=$(cat deploy_key)
+        echo ${#key_content}
+        
         eval "$(ssh-agent -s)"
         ssh-add deploy_key
         mkdir -p ~/.ssh
