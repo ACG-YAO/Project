@@ -1,0 +1,27 @@
+name: Build and Deploy to name.github.io
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install and Build
+      run: |
+        npm install
+        npx vite build
+
+    - name: Deploy to name.github.io
+      uses: JamesIves/github-pages-deploy-action@4.1.5
+      with:
+        repository: name/name.github.io
+        branch: master
+        folder: dist
+        token: ${{ secrets.GITHUB_TOKEN }}
