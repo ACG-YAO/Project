@@ -12,6 +12,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 let pumpkin; 
+
 // Load the pumpkin model
 const loader = new GLTFLoader();
 loader.load('./models/Pumpkin.glb', (gltf) => {
