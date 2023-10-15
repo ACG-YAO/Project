@@ -1,0 +1,1 @@
+export { default as FixedObject } from './FixedObject.js';

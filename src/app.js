@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { Ghost  } from './Object';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js'; // Importing PointerLockControls for mouse view control
 
 
@@ -11,6 +11,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 let cameraOffset = new THREE.Vector3(0, 2, 5);
+renderer.setClearColor(0x00BFFF); // RGB value for blue
 
 let controls = new PointerLockControls(camera, renderer.domElement); // Create the controls
 scene.add(controls.getObject());
@@ -34,20 +35,17 @@ function createGroundGrid(size, spacing) {
 // Create a 20x20 grid with each square being 1 unit in size
 createGroundGrid(20, 1);
 
-let pumpkin; 
+
 const speed = 0.02; // Movement speed
 let moveForward = false;
 let moveBackward = false;
 let turnLeft = false;
 let turnRight = false;
 
-const loader = new GLTFLoader();
-loader.load('./models/Pumpkin.glb', (gltf) => {
-    pumpkin = gltf.scene;
-    pumpkin.scale.set(2, 2, 2);
-    pumpkin.rotation.y = Math.PI;
-    scene.add(pumpkin);
+const pumpkin = new Ghost((gltf) => {
+    scene.add(gltf.scene);
 });
+
 
 const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(light);
@@ -70,69 +68,32 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Keyboard controls
 document.addEventListener('keydown', (event) => {
-    switch (event.code) {
-        case 'KeyW':
-            moveForward = true;
-            break;
-        case 'KeyS':
-            moveBackward = true;
-            break;
-        case 'KeyA':
-            turnLeft = true;
-            break;
-        case 'KeyD':
-            turnRight = true;
-            break;
-    }
+    pumpkin.KeyDownHandler(event);
 });
 
 document.addEventListener('keyup', (event) => {
-    switch (event.code) {
-        case 'KeyW':
-            moveForward = false;
-            break;
-        case 'KeyS':
-            moveBackward = false;
-            break;
-        case 'KeyA':
-            turnLeft = false;
-            break;
-        case 'KeyD':
-            turnRight = false;
-            break;
-    }
+    pumpkin.KeyUpHandler(event);
 });
 
 function animate() {
     requestAnimationFrame(animate);
 
-    if (pumpkin) {
-        // Determine the pumpkin's forward direction based on its rotation
-        const direction = new THREE.Vector3();
-        pumpkin.getWorldDirection(direction);
+    if (pumpkin.object3D) {
+        pumpkin.animate();
 
-        if (moveForward) {
-            pumpkin.position.add(direction.multiplyScalar(speed));  // Moving in the direction
-        }
-        if (moveBackward) {
-            pumpkin.position.add(direction.multiplyScalar(-speed));   // Moving opposite to the direction
-        }
-        if (turnLeft) pumpkin.rotation.y += 0.5*speed;
-        if (turnRight) pumpkin.rotation.y -= 0.5*speed;
+        // Compute the relative camera offset based on the pumpkin.object3D's rotation
+        const relativeOffsetX = cameraOffset.z * Math.sin(pumpkin.object3D.rotation.y) + cameraOffset.x * Math.cos(pumpkin.object3D.rotation.y);
+        const relativeOffsetZ = cameraOffset.z * Math.cos(pumpkin.object3D.rotation.y) - cameraOffset.x * Math.sin(pumpkin.object3D.rotation.y);
 
-        // Compute the relative camera offset based on the pumpkin's rotation
-        const relativeOffsetX = cameraOffset.z * Math.sin(pumpkin.rotation.y) + cameraOffset.x * Math.cos(pumpkin.rotation.y);
-        const relativeOffsetZ = cameraOffset.z * Math.cos(pumpkin.rotation.y) - cameraOffset.x * Math.sin(pumpkin.rotation.y);
-
-        // Set the camera's position based on the pumpkin's position and the relative offset
+        // Set the camera's position based on the pumpkin.object3D's position and the relative offset
         camera.position.set(
-            pumpkin.position.x - relativeOffsetX,
-            pumpkin.position.y + cameraOffset.y,
-            pumpkin.position.z - relativeOffsetZ
+            pumpkin.object3D.position.x - relativeOffsetX,
+            pumpkin.object3D.position.y + cameraOffset.y,
+            pumpkin.object3D.position.z - relativeOffsetZ
         );
 
-        // Make the camera look at the pumpkin
-        camera.lookAt(pumpkin.position);
+        // Make the camera look at the pumpkin.object3D
+        camera.lookAt(pumpkin.object3D.position);
     }
 
     renderer.render(scene, camera);
