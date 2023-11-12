@@ -10,9 +10,11 @@ export class MovableObject extends BaseObject {
     this.moveBackward = false;
     this.turnLeft = false;
     this.turnRight = false;
-  }
-   animate() {
-        const direction = new THREE.Vector3();
+    }
+
+    animate(detection_list) {
+       const direction = new THREE.Vector3();
+       
         this.object3D.getWorldDirection(direction);
         if (this.moveForward) {
             this.object3D.position.add(direction.multiplyScalar(this.move_speed));  // Moving in the direction
