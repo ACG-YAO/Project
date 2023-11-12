@@ -8,7 +8,7 @@ export class Pumpkin extends Reward {
         this.turnRight = true;
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
-            loader.load('Models/pumpkin.glb', (gltf) => {
+            loader.load('Models/Pumpkin.glb', (gltf) => {
                 this.initialize(gltf, scene, onLoadCallback, 3.0, 3.0, 3.0);
                 resolve(gltf); 
             }, undefined, (error) => {
