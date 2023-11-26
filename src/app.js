@@ -28,7 +28,8 @@ scene.add(controls.getObject());
 //     sound.pause();
 // });
 
-function createGroundGrid(size, spacing) {
+
+/*function createGroundGrid(size, spacing) {
     const halfSize = size / 2;
 
     for (let i = -halfSize; i <= halfSize; i++) {
@@ -38,27 +39,147 @@ function createGroundGrid(size, spacing) {
             const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
             const mesh = new THREE.Mesh(geometry, material);
             mesh.position.set(i * spacing, 0, j * spacing);
-            mesh.rotateX(Math.PI / 2);  
+            mesh.rotateX(Math.PI / 2);
             scene.add(mesh);
         }
     }
 }
 
 createGroundGrid(20, 1);
+*/
+
+function createGroundGrid(maze, size, spacing) {
+    const halfSize = size / 2;
+
+    for (let i = -halfSize; i < halfSize; i++) {
+        for (let j = -halfSize; j < halfSize; j++) {
+            const geometry = new THREE.PlaneGeometry(spacing, spacing);
+            let color;
+            switch(maze[j + halfSize][i + halfSize]) {
+              case 0: 
+                color = new THREE.Color('gray');
+                break;
+              case 1: 
+                color = new THREE.Color('white');
+                break;
+              case 2: 
+                color = new THREE.Color('gold');
+                break;
+              case 3:
+                color = new THREE.Color('red');
+            }
+
+            const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(i * spacing, 0, j * spacing);
+            mesh.rotateX(Math.PI / 2);  
+            scene.add(mesh);
+        }
+    }
+}
+function generateMazeWithRewards(size, rewardCount, exclusionSize) {
+    const maze = Array.from({ length: size }, () => Array(size).fill(0));
+    const halfSize = size / 2;
+    const excludeStart = halfSize - exclusionSize / 2;
+    const excludeEnd = halfSize + exclusionSize / 2;
+  
+    // Check if the coordinates are within the exclusion zone
+    function isInExclusionZone(x, y) {
+      return x >= excludeStart && x < excludeEnd && y >= excludeStart && y < excludeEnd;
+    }
+  
+    // Randomly place rewards, avoiding the exclusion zone
+    const rewards = [];
+    while (rewards.length < rewardCount) {
+        const x = Math.floor(Math.random() * size);
+        const y = Math.floor(Math.random() * size);
+        
+        // Check if the new position is sufficiently far from existing rewards
+        const isFarEnough = rewards.every((reward) => {
+            return Math.abs(reward.x - x) + Math.abs(reward.y - y) > 10;
+        });
+
+        if (!isInExclusionZone(x, y) && isFarEnough) {
+            rewards.push({ x, y });
+        }
+    }
+  
+    // Create a random path between two points
+    function createRandomPath(start, end) {
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const dist = Math.abs(dx) + Math.abs(dy);
+      let steps = 0;
+  
+      let current = { ...start };
+      while ((current.x !== end.x || current.y !== end.y) && steps < dist * 2) {
+        maze[current.y][current.x] = 1; // Mark the current spot as a path
+  
+        // Randomly choose to move in x or y direction
+        if (Math.random() < 0.5 && current.x !== end.x) {
+          current.x += Math.sign(dx);
+        } else if (current.y !== end.y) {
+          current.y += Math.sign(dy);
+        }
+        steps++;
+      }
+  
+      // Ensure the end point is marked as a path if the loop exits early
+      maze[end.y][end.x] = 1;
+    }
+  
+    // Create paths between all rewards
+    let current = { x: 25, y: 25 }; // Start at the top-left corner
+    
+    rewards.forEach(reward => {
+      createRandomPath(current, reward);
+      current = reward;
+    });
+  
+    // Place rewards on the maze
+    rewards.forEach(reward => maze[reward.y][reward.x] = 2);
+    maze[25][25] = 3;
+    return maze;
+}
+
+const mazeSize = 50;
+const halfSize = mazeSize / 2;
+const numRewards = 18;
+const exclusionZoneSize = 15;
+const maze = generateMazeWithRewards(mazeSize, numRewards, exclusionZoneSize);
+
+console.log(maze);
+
+createGroundGrid(maze, 50, 1);
 
 var fixedObjects = [];
 var movableObjects = [];
 
-const pumpkin = new Ghost(scene, (gltf) => {
-    scene.add(gltf.scene);
-});
-fixedObjects.push(pumpkin);
 
-const reward = new Pumpkin(scene,(gltf) => {
-    gltf.scene.position.set(3,0,3);
+for (let y = 0; y < maze.length; y++) {
+    for (let x = 0; x < maze[y].length; x++) {
+      if (maze[y][x] === 2) {
+        // Create a new reward and place it at the (x, y) position
+        const reward = new Pumpkin(scene, (gltf) => {
+          gltf.scene.position.set(x - halfSize, 0, y - halfSize); // Set to the correct height if needed
+          scene.add(gltf.scene);
+        });
+          // Assuming fixedObjects is an array to keep track of rewards
+          while (!reward.getLoadPromise()) {
+
+          }
+          console.log(reward.getLoadPromise());
+         fixedObjects.push(reward);
+      }
+    }
+}
+
+const ghost = new Ghost(scene, (gltf) => {
+    gltf.scene.position.set(0, 0, 0);
     scene.add(gltf.scene);
 });
-fixedObjects.push(reward);
+movableObjects.push(ghost);
+
 
 const Inn_1 = new Inn(scene, (gltf) => {
     gltf.scene.position.set(-6,0,-5);
@@ -183,11 +304,11 @@ window.addEventListener('resize', function() {
 renderer.setPixelRatio(window.devicePixelRatio);
 
 document.addEventListener('keydown', (event) => {
-    pumpkin.KeyDownHandler(event);
+    ghost.KeyDownHandler(event);
 });
 
 document.addEventListener('keyup', (event) => {
-    pumpkin.KeyUpHandler(event);
+    ghost.KeyUpHandler(event);
 });
 
 function animate() {
@@ -196,23 +317,23 @@ function animate() {
     }
     requestAnimationFrame(animate);
 
-    if (pumpkin.object3D) {
-        pumpkin.animate(fixedObjects);
+    if (ghost.object3D) { 
+        ghost.animate(scene, fixedObjects);
 
-        const relativeOffsetX = cameraOffset.z * Math.sin(pumpkin.object3D.rotation.y) + cameraOffset.x * Math.cos(pumpkin.object3D.rotation.y);
-        const relativeOffsetZ = cameraOffset.z * Math.cos(pumpkin.object3D.rotation.y) - cameraOffset.x * Math.sin(pumpkin.object3D.rotation.y);
+        const relativeOffsetX = cameraOffset.z * Math.sin(ghost.object3D.rotation.y) + cameraOffset.x * Math.cos(ghost.object3D.rotation.y);
+        const relativeOffsetZ = cameraOffset.z * Math.cos(ghost.object3D.rotation.y) - cameraOffset.x * Math.sin(ghost.object3D.rotation.y);
 
         camera.position.set(
-            pumpkin.object3D.position.x - relativeOffsetX,
-            pumpkin.object3D.position.y + cameraOffset.y,
-            pumpkin.object3D.position.z - relativeOffsetZ
+            ghost.object3D.position.x - relativeOffsetX,
+            ghost.object3D.position.y + cameraOffset.y,
+            ghost.object3D.position.z - relativeOffsetZ
         );
 
-        camera.lookAt(pumpkin.object3D.position);
+        camera.lookAt(ghost.object3D.position);
     }
 
     for (let i = 0; i < fixedObjects.length; i++) {
-        if (fixedObjects[i] == pumpkin) {
+        if (fixedObjects[i] == ghost) {
             continue;
         }
         fixedObjects[i].animate();
