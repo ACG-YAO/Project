@@ -1,7 +1,7 @@
 import { Obstacles } from './Obstacles.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export class Fence_reverse extends Obstacles {
+export class ReversedFence extends Obstacles {
     constructor(scene, onLoadCallback) {
         super();
         this.promise = new Promise((resolve, reject) => {
@@ -19,4 +19,4 @@ export class Fence_reverse extends Obstacles {
         });
     }
 }
-export default Fence_reverse;
+export default ReversedFence;

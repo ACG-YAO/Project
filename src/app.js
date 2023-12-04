@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Ghost, Pumpkin, Inn, Fence, Fence_reverse, Campfire, DeadTrees } from './Object';
+import { Ghost, Pumpkin, Inn, Fence, ReversedFence, Campfire, DeadTrees } from './Object';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { Scene, Color, Camera, Vector3, Fog, AudioListener, 
@@ -246,7 +246,7 @@ function findFence_y(maze) {
 
 placeObjectOnCenters(scene, maze, Pumpkin, findreward(maze));
 placeObjectOnCenters(scene, maze, Fence, findFence_y(maze));
-placeObjectOnCenters(scene, maze, Fence_reverse, findFence_x(maze));
+placeObjectOnCenters(scene, maze, ReversedFence, findFence_x(maze));
 
 function findlargearea(maze) {
     const zones = [];
