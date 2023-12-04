@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Ghost, Pumpkin, Inn, Shrub, Campfire, DeadTrees } from './Object';
+import { Ghost, Pumpkin, Inn, Fence, Fence_reverse, Campfire, DeadTrees } from './Object';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { Scene, Color, Camera, Vector3, Fog, AudioListener, 
@@ -29,25 +29,6 @@ scene.add(controls.getObject());
 //     sound.pause();
 // });
 
-
-/*function createGroundGrid(size, spacing) {
-    const halfSize = size / 2;
-
-    for (let i = -halfSize; i <= halfSize; i++) {
-        for (let j = -halfSize; j <= halfSize; j++) {
-            const geometry = new THREE.PlaneGeometry(spacing, spacing);
-            const color = new THREE.Color(Math.random(), Math.random(), Math.random());
-            const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(i * spacing, 0, j * spacing);
-            mesh.rotateX(Math.PI / 2);
-            scene.add(mesh);
-        }
-    }
-}
-
-createGroundGrid(20, 1);
-*/
 
 function createGroundGrid(maze, size, spacing) {
     const halfSize = size / 2;
@@ -205,42 +186,67 @@ function findAllSurroundedByOne(maze) {
       for (let x = 1; x < maze[y].length - 1; x++) {
         // Check if all neighbors of maze[y][x] are 1
         if (maze[y][x] === 0){
-            if (
-            maze[y - 1][x] === 1 || // North
-            maze[y + 1][x] === 1 || // South
-            maze[y][x - 1] === 1 || // West
-            maze[y][x + 1] === 1 || // East
-            maze[y - 1][x - 1] === 1 || // Northwest
-            maze[y - 1][x + 1] === 1 || // Northeast
-            maze[y + 1][x - 1] === 1 || // Southwest
-            maze[y + 1][x + 1] === 1 // Southeast
-            ) {
-                surroundedCells.push({ x, y });
-    }  }
+          if (
+          maze[y - 1][x] === 1 || // North
+          maze[y + 1][x] === 1 || // South
+          maze[y][x - 1] === 1 || // West
+          maze[y][x + 1] === 1 || // East
+          maze[y - 1][x - 1] === 1 || // Northwest
+          maze[y - 1][x + 1] === 1 || // Northeast
+          maze[y + 1][x - 1] === 1 || // Southwest
+          maze[y + 1][x + 1] === 1 // Southeast
+          ) {
+          surroundedCells.push({ x, y });
+          }  
+        }
       }
     }
-  
     return surroundedCells;
 }
-placeObjectOnCenters(scene, maze, Pumpkin, findAllSurroundedByOne(maze));
-//placeObjectOnCenters(scene, maze, DeadTrees, findlargear
-placeObjectOnCenters(scene, maze, Shrub, findreward(maze));
 
-// place reward
-/*for (let y = 0; y < maze.length; y++) {
-    for (let x = 0; x < maze[y].length; x++) {
-      if (maze[y][x] === 2) {
-        // Create a new reward and place it at the (x, y) position
-        const reward = new Pumpkin(scene, (gltf) => {
-          gltf.scene.position.set(scale_size * (x - halfSize), 0, scale_size * (y - halfSize)); // Set to the correct height if needed
-          scene.add(gltf.scene);
-        });
-          // Assuming fixedObjects is an array to keep track of rewards
-         while (!reward.getLoadPromise()) {}
-         fixedObjects.push(reward);
-      }
+function findFence_x(maze) {
+    const middlePoints = [];
+
+    for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+            if (maze[y][x] === 0) {
+                // Check if left neighbor is 1
+                if (x > 0 && (maze[y][x - 1] === 1 || maze[y][x - 1] === 3)) {
+                    middlePoints.push({ x: (x - 0.65), y });
+                }
+                // Check if right neighbor is 1
+                if (x < maze[y].length - 1 && (maze[y][x + 1] === 1  || maze[y][x + 1] === 3)) {
+                    middlePoints.push({ x: (x + 0.35), y });
+                }
+            }
+        }
     }
-}*/
+    return middlePoints;
+}
+
+function findFence_y(maze) {
+  const middlePoints = [];
+
+  for (let y = 0; y < maze.length; y++) {
+      for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === 0) {
+              // Check if upper neighbor is 1
+              if (y > 0 && (maze[y - 1][x] === 1 || maze[y - 1][x] === 3)) {
+                  middlePoints.push({ x, y: (y - 0.7) });
+              }
+              // Check if lower neighbor is 1
+              if (y < maze.length - 1 && (maze[y + 1][x] === 1 || maze[y + 1][x] === 3)) {
+                  middlePoints.push({ x, y: (y + 0.3) });
+              }
+          }
+      }
+  }
+  return middlePoints;
+}
+
+placeObjectOnCenters(scene, maze, Pumpkin, findreward(maze));
+placeObjectOnCenters(scene, maze, Fence, findFence_y(maze));
+placeObjectOnCenters(scene, maze, Fence_reverse, findFence_x(maze));
 
 function findlargearea(maze) {
     const zones = [];
@@ -296,97 +302,6 @@ const ghost = new Ghost(scene, (gltf) => {
     scene.add(gltf.scene);
 });
 movableObjects.push(ghost);
-
-
-const Inn_1 = new Inn(scene, (gltf) => {
-    gltf.scene.position.set(-6,0,-5);
-    scene.add(gltf.scene);
-    // gltf.scene.scale.set(0.8,0.8,0.8);
-});
-fixedObjects.push(Inn_1);
-
-// const Lamp_1 = new Lamp(scene, (gltf) => {
-//     gltf.scene.position.set(0,0,0);
-//     scene.add(gltf.scene);
-// });
-
-// const Campfire_1 = new Campfire(scene, (gltf) => {
-//     gltf.scene.position.set(-2.5,0.45,-3.6);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(Campfire_1);
-
-// const Campfire_2 = new Campfire(scene, (gltf) => {
-//     gltf.scene.position.set(-2,0.54,-4.5);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(Campfire_2);
-
-// const Campfire_3 = new Campfire(scene, (gltf) => {
-//     gltf.scene.position.set(-7.5,0.45,0);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(Campfire_3);
-
-// const Campfire_4 = new Campfire(scene, (gltf) => {
-//     gltf.scene.position.set(-7,0.54,1);
-//     gltf.scene.scale.set(1.2,1.2,1.3);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(Campfire_4);
-/*
-const DeadTrees_0 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(9,0,-8);
-    gltf.scene.scale.set(0.5,5,0.5);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_0);
-const DeadTrees_1 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(9,0,-8);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_1);
-const DeadTrees_2 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(8,0,-4);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_2);
-const DeadTrees_3 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(9.5,0,4);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_3);
-// const DeadTrees_4 = new DeadTrees(scene, (gltf) => {
-//     gltf.scene.position.set(8,0,8);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(DeadTrees_4);
-const DeadTrees_5 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(8.5,0,0);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_5);
-// const DeadTrees_6 = new DeadTrees(scene, (gltf) => {
-//     gltf.scene.position.set(6,0,8);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(DeadTrees_6);
-// // const DeadTrees_7 = new DeadTrees(scene, (gltf) => {
-//     gltf.scene.position.set(3.5,0,8);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(DeadTrees_7);
-const DeadTrees_8 = new DeadTrees(scene, (gltf) => {
-    gltf.scene.position.set(-2,0,8);
-    scene.add(gltf.scene);
-});
-fixedObjects.push(DeadTrees_8);
-// const DeadTrees_9 = new DeadTrees(scene, (gltf) => {
-//     gltf.scene.position.set(0,0,8);
-//     scene.add(gltf.scene);
-// });
-// fixedObjects.push(DeadTrees_9);
-*/
 
 const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(light);

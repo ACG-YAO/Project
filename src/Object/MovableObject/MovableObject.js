@@ -34,31 +34,52 @@ export class MovableObject extends BaseObject {
     animate(scene, objectsList) {
         if (this.boundingBoxHelper === null)
             this.check(scene);
-        const collisionDetected = this.checkCollision(scene, objectsList);
-        console.log(collisionDetected);
-
-        if (!collisionDetected) {
-            this.handleMovement();
-            this.updateHistory();
-        } else {
-            this.revertToPreviousState();
-        }
+        this.checkCollision(scene, objectsList);
+        this.handleMovement(objectsList);
         this.updateBoundingBoxHelper();
     }
 
-    handleMovement() {
+    handleMovement(objectsList) {
         const direction = new THREE.Vector3();
         this.object3D.getWorldDirection(direction);
-
+        let potentialPosition = this.object3D.position.clone();
         if (this.moveForward) {
-            this.object3D.position.add(direction.multiplyScalar(this.move_speed));
+            potentialPosition.add(direction.multiplyScalar(this.move_speed));
         }
         if (this.moveBackward) {
-            this.object3D.position.add(direction.multiplyScalar(-this.move_speed));
+            potentialPosition.sub(direction.multiplyScalar(this.move_speed));
         }
-        if (this.turnLeft) this.object3D.rotation.y += this.rotate_speed;
-        if (this.turnRight) this.object3D.rotation.y -= this.rotate_speed;
+        
+        let potentialRotation = this.object3D.rotation.clone();
+        if (this.turnLeft) potentialRotation.y += this.rotate_speed;
+        if (this.turnRight) potentialRotation.y -= this.rotate_speed;
+        
+        if (!this.willCollide(potentialPosition, potentialRotation, objectsList)) { 
+            this.object3D.position.copy(potentialPosition);
+            this.object3D.rotation.copy(potentialRotation);
+        }
     }
+
+    willCollide(potentialPosition, potentialRotation, objectsList) {   
+        let testObject = this.object3D.clone();
+        testObject.position.copy(potentialPosition);
+        testObject.rotation.copy(potentialRotation);
+        const halfSize = 0.5;
+        const min = testObject.position.clone().sub(new THREE.Vector3(halfSize, 0, halfSize));
+        const max = testObject.position.clone().add(new THREE.Vector3(halfSize, 2 * halfSize, halfSize));
+        const boundingBox = new THREE.Box3(min, max);
+        let collisionDetected = false;
+        objectsList.forEach((object) => {
+            const objectBoundingBox = new THREE.Box3().setFromObject(object.object3D);
+            if (boundingBox.intersectsBox(objectBoundingBox)) {
+                if (object.obstacle) {
+                    collisionDetected = true;
+                }
+            }
+        });
+        return collisionDetected;
+    }
+
 
     revertToPreviousState() {
         if (this.history.length > 0) {
@@ -81,24 +102,16 @@ export class MovableObject extends BaseObject {
         const max = this.object3D.position.clone().add(new THREE.Vector3(halfSize, 2 * halfSize, halfSize));
         const boundingBox = new THREE.Box3(min, max);
 
-        let collisionDetected = false;
-        
         objectsList.forEach((object) => {
             const objectBoundingBox = new THREE.Box3().setFromObject(object.object3D);
             if (boundingBox.intersectsBox(objectBoundingBox)) {
-                if (object.obstacle) {
-                    collisionDetected = true;
-                }
-                else if (object.reward) {
+                if (object.reward) {
                     object.disappear();
                     scene.remove(object.object3D);
                 }
             }
         });
-
-        return collisionDetected;
     }
-
 }
 
 export default MovableObject;
