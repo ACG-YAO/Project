@@ -11,18 +11,6 @@ export class MovableObject extends BaseObject {
         this.turnLeft = false;
         this.turnRight = false;
         this.boundingBoxHelper = null;
-        this.history = [];
-        this.historySize = 50;
-    }
-
-    updateHistory() {
-        this.history.unshift({
-            position: this.object3D.position.clone(),
-            rotation: this.object3D.rotation.clone()
-        });
-        if (this.history.length > this.historySize) {
-            this.history.pop();
-        }
     }
 
     check(scene) {
@@ -59,36 +47,7 @@ export class MovableObject extends BaseObject {
             this.object3D.rotation.copy(potentialRotation);
         }
     }
-
-    willCollide(potentialPosition, potentialRotation, objectsList) {   
-        let testObject = this.object3D.clone();
-        testObject.position.copy(potentialPosition);
-        testObject.rotation.copy(potentialRotation);
-        const halfSize = 0.5;
-        const min = testObject.position.clone().sub(new THREE.Vector3(halfSize, 0, halfSize));
-        const max = testObject.position.clone().add(new THREE.Vector3(halfSize, 2 * halfSize, halfSize));
-        const boundingBox = new THREE.Box3(min, max);
-        let collisionDetected = false;
-        objectsList.forEach((object) => {
-            const objectBoundingBox = new THREE.Box3().setFromObject(object.object3D);
-            if (boundingBox.intersectsBox(objectBoundingBox)) {
-                if (object.obstacle) {
-                    collisionDetected = true;
-                }
-            }
-        });
-        return collisionDetected;
-    }
-
-
-    revertToPreviousState() {
-        if (this.history.length > 0) {
-            const prevState = this.history.shift();
-            this.object3D.position.copy(prevState.position);
-            this.object3D.rotation.copy(prevState.rotation);
-        }
-    }
-
+    
     updateBoundingBoxHelper() {
         const halfSize = 0.5;
         const min = this.object3D.position.clone().sub(new THREE.Vector3(halfSize, 0, halfSize));
@@ -111,6 +70,26 @@ export class MovableObject extends BaseObject {
                 }
             }
         });
+    }
+
+    willCollide(potentialPosition, potentialRotation, objectsList) {
+        let testObject = this.object3D.clone();
+        testObject.position.copy(potentialPosition);
+        testObject.rotation.copy(potentialRotation);
+        const halfSize = 0.5;
+        const min = testObject.position.clone().sub(new THREE.Vector3(halfSize, 0, halfSize));
+        const max = testObject.position.clone().add(new THREE.Vector3(halfSize, 2 * halfSize, halfSize));
+        const boundingBox = new THREE.Box3(min, max);
+        let collisionDetected = false;
+        objectsList.forEach((object) => {
+            const objectBoundingBox = new THREE.Box3().setFromObject(object.object3D);
+            if (boundingBox.intersectsBox(objectBoundingBox)) {
+                if (object.obstacle) {
+                    collisionDetected = true;
+                }
+            }
+        });
+        return collisionDetected;
     }
 }
 

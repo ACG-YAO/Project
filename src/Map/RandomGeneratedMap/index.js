@@ -1,0 +1,1 @@
+export { default as RandomGeneratedMap } from './RandomGeneratedMap.js';
