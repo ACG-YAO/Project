@@ -15,8 +15,7 @@ export class MovableObject extends BaseObject {
 
     check(scene) {
         this.boundingBoxHelper = new THREE.Box3Helper(new THREE.Box3(), 0xff0000);
-        console.log(scene);
-        scene.add(this.boundingBoxHelper);
+        //scene.add(this.boundingBoxHelper);
     }
 
     animate(scene, objectsList) {

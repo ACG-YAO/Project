@@ -14,7 +14,7 @@ export class BaseObject extends Group {
         this.object3D.scale.set(x, y, z);
         this.BoundingBox = new THREE.Box3().setFromObject(this.object3D);
         this.boxHelper = new THREE.BoxHelper(this.object3D, 0xff0000);
-        scene.add(this.boxHelper);
+        //scene.add(this.boxHelper);
         if (onLoadCallback) onLoadCallback(gltf); // call the callback if provided
     }
 

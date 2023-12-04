@@ -92,7 +92,7 @@ export class RandomGeneratedMap extends BaseMap {
                         color = new THREE.Color('gold');
                         break;
                     case this.MapTypes.START:
-                        color = new THREE.Color('red');
+                        color = new THREE.Color('gray');
                         break;
                     case this.MapTypes.UNDEFINED:
                         color = new THREE.Color('pink');
@@ -166,7 +166,37 @@ export class RandomGeneratedMap extends BaseMap {
         return middlePoints;
     }
 
+    findLargeArea() {
+        const zones = [];
+        const largesize = 2;
+        const largehalfSize = Math.floor(largesize / 2);
+        
+        for (let y = largehalfSize; y < this.maze.length - largehalfSize; y++) {
+            for (let x = largehalfSize; x < this.maze[y].length - largehalfSize; x++) {
+                let isAllZero = true;
+                
+                for (let i = -largehalfSize; i <= largehalfSize; i++) {
+                    for (let j = -largehalfSize; j <= largehalfSize; j++) {
+                        if (this.maze[y + i][x + j] !== this.MapTypes.SCENE) {
+                            isAllZero = false;
+                            break;
+                        }
+                    }
+                    if (!isAllZero) break;
+                }
 
+                if (isAllZero) {
+                    for (let i = -largehalfSize; i <= largehalfSize; i++) {
+                        for (let j = -largehalfSize; j <= largehalfSize; j++) {
+                            this.maze[y + i][x + j] = this.MapTypes.UNDEFINED;
+                        }
+                    }
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return zones;
+    }
 }
 
 export default RandomGeneratedMap;
