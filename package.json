@@ -1,8 +1,50 @@
 {
+  "name": "cat-dash",
+  "repository": "Cat-Dash",
+  "version": "1.1.0",
+  "title": "Cat Dash",
+  "description": "A cat sitting on a mop flying in cites. Switch tracks to avoid obstacles.",
+  "keywords": [
+    "Princeton",
+    "graphics",
+    "three.js",
+    "COS 426",
+    "ivy league",
+    "cat",
+    "game",
+    "flying",
+    "avoid obstacles"
+  ],
+  "scripts": {
+    "start": "webpack-dev-server --mode development --output-public-path \"\"",
+    "prebuild": "rimraf ./build && mkdir ./build",
+    "build": "npm run prebuild && webpack --mode production --output-public-path \"\"",
+    "format": "prettier --write '*.js' 'src/**/*.js'",
+    "deploy": "npm run prebuild && webpack --mode production && gh-pages -d build"
+  },
   "dependencies": {
-    "three": "^0.157.0"
+    "dat.gui": "^0.7.7",
+    "three": "^0.158.0",
+    "three-obj-loader": "^1.1.3"
   },
   "devDependencies": {
-    "vite": "^4.4.11"
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@webpack-cli/serve": "^2.0.5",
+    "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.54.0",
+    "file-loader": "^6.0.0",
+    "gh-pages": "^2.2.0",
+    "html-webpack-plugin": "^4.2.1",
+    "prettier": "^2.0.4",
+    "raw-loader": "^4.0.1",
+    "rimraf": "^3.0.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }

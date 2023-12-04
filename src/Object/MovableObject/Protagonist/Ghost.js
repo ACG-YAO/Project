@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 export class Ghost extends Protagonist {
     constructor(scene, onLoadCallback) {
         super();
-        this.move_speed = 0.02;
+        this.move_speed = 0.05;
         this.rotate_speed = 0.01;
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
