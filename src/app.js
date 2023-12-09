@@ -1,7 +1,16 @@
 import * as THREE from 'three';
 import { Ghost, Pumpkin, Fence, ReversedFence } from './Object';
 import { RandomGeneratedMap } from './Map';
+import { SwitchableCamera } from './Camera';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+renderer.setClearColor(0x00BFFF); 
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
 
 // Load audio
 // var listener = new THREE.AudioListener();
@@ -26,21 +35,19 @@ map.setReversedFence(ReversedFence);
 map.setReward(Pumpkin);
 map.initialize();
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 let cameraOffset = new THREE.Vector3(0, 2, 5);
-renderer.setClearColor(0x00BFFF); 
-let controls = new PointerLockControls(camera, renderer.domElement); 
+let cameraPosition = new THREE.Vector3(0, 0, 20);
+const camera = new SwitchableCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000, cameraOffset,cameraPosition);
+let controls = new PointerLockControls(camera.getCamera(), renderer.domElement);
 map.scene.add(controls.getObject());
 
 const ghost = new Ghost(map.scene, (gltf) => {
     gltf.scene.position.set(0, 0, 0);
     map.scene.add(gltf.scene);
 });
-map.pushFixedObjects(ghost);
+map.pushMovableObjects(ghost);
 
+console.log(ghost);
 const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 map.scene.add(light);
 
@@ -48,23 +55,36 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(1, 1, 1).normalize();
 map.scene.add(dirLight);
 
-camera.position.z = 20;
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.aspect = window.innerWidth / window.innerHeight;
-camera.updateProjectionMatrix();
 window.addEventListener('resize', function() {
     renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    camera.getCamera().aspect = window.innerWidth / window.innerHeight;
+    camera.getCamera().updateProjectionMatrix();
 });
-renderer.setPixelRatio(window.devicePixelRatio);
+document.addEventListener('click', function () {
+    controls.lock();
+}, false);
+
 
 document.addEventListener('keydown', (event) => {
     ghost.KeyDownHandler(event);
+    camera.KeyDownHandler(event);
 });
 
 document.addEventListener('keyup', (event) => {
     ghost.KeyUpHandler(event);
+    camera.KeyUpHandler(event);
+});
+
+document.addEventListener('mousedown', function (event) {
+    camera.MouseDownHandler(event);
+});
+
+document.addEventListener('mousemove', function (event) {
+    camera.MouseMoveHandler(event);
+});
+
+document.addEventListener('mouseup', function (event) {
+    camera.MouseUpHandler(event);
 });
 
 function animate() {
@@ -73,29 +93,12 @@ function animate() {
         fixedObjects[i].updateBoundary();
     }
     requestAnimationFrame(animate);
-
-    if (ghost.object3D) { 
-        ghost.animate(map.scene, fixedObjects);
-
-        const relativeOffsetX = cameraOffset.z * Math.sin(ghost.object3D.rotation.y) + cameraOffset.x * Math.cos(ghost.object3D.rotation.y);
-        const relativeOffsetZ = cameraOffset.z * Math.cos(ghost.object3D.rotation.y) - cameraOffset.x * Math.sin(ghost.object3D.rotation.y);
-
-        camera.position.set(
-            ghost.object3D.position.x - relativeOffsetX,
-            ghost.object3D.position.y + cameraOffset.y,
-            ghost.object3D.position.z - relativeOffsetZ
-        );
-
-        camera.lookAt(ghost.object3D.position);
-    }
-
+    ghost.animate(map.scene, fixedObjects);
+    camera.animate(ghost.object3D.position, ghost.object3D.rotation);
     for (let i = 0; i < fixedObjects.length; i++) {
-        if (fixedObjects[i] == ghost) {
-            continue;
-        }
         fixedObjects[i].animate();
     }
-    renderer.render(map.scene, camera);
+    renderer.render(map.scene, camera.getCamera());
 }
 
 let loadPromises = map.getFixedObjects().map(object => {
