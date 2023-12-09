@@ -1,4 +1,5 @@
 import { BaseMap } from '../BaseMap.js';
+import { Water } from 'three/addons/objects/Water.js';
 import * as THREE from 'three';
 
 export class RandomGeneratedMap extends BaseMap {
@@ -6,16 +7,18 @@ export class RandomGeneratedMap extends BaseMap {
         super(mazeSize, numRewards, exclusionZoneSize, scaleSize);
         this.minimumDistance = 10;
         this.MapTypes = {
-            SCENE: 0,
+            LAND: 0,
             ROAD: 1,
             REWARD: 2,
             START: 3,
-            UNDEFINED: 4
+            WATER: 4
         };
+        this.waterObjectsList = [];
     }
 
     initialize() {
         this.generateMazeWithRewards();
+        this.findWater();
         this.createGroundGrid();
         this.placeObjects(this.Reward, this.findReward());
         this.placeObjects(this.Fence, this.findYFence());
@@ -79,33 +82,53 @@ export class RandomGeneratedMap extends BaseMap {
     createGroundGrid() {
         for (let i = -this.halfSize; i < this.halfSize; i++) {
             for (let j = -this.halfSize; j < this.halfSize; j++) {
-                const geometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
-                let color;
+                let geometry, material, mesh;
                 switch (this.maze[j + this.halfSize][i + this.halfSize]) {
-                    case this.MapTypes.SCENE:
-                        color = new THREE.Color('white');
+                    case this.MapTypes.LAND:
+                        geometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
+                        material = new THREE.MeshBasicMaterial({ color: new THREE.Color('white'), side: THREE.DoubleSide });
+                        mesh = new THREE.Mesh(geometry, material);
                         break;
                     case this.MapTypes.ROAD:
-                        color = new THREE.Color('gray');
+                    case this.MapTypes.START:
+                        geometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
+                        material = new THREE.MeshBasicMaterial({ color: new THREE.Color('gray'), side: THREE.DoubleSide });
+                        mesh = new THREE.Mesh(geometry, material);
                         break;
                     case this.MapTypes.REWARD:
-                        color = new THREE.Color('gold');
+                        geometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
+                        material = new THREE.MeshBasicMaterial({ color: new THREE.Color('gold'), side: THREE.DoubleSide });
+                        mesh = new THREE.Mesh(geometry, material);
                         break;
-                    case this.MapTypes.START:
-                        color = new THREE.Color('gray');
-                        break;
-                    case this.MapTypes.UNDEFINED:
-                        color = new THREE.Color('pink');
+                    case this.MapTypes.WATER:
+                        const waterGeometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
+                        const water = new Water(waterGeometry, {
+                            textureWidth: 2048,
+                            textureHeight: 2048,
+                            waterNormals: new THREE.TextureLoader().load('Textures/Water.jpg', function (texture) {
+                                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+                            }),
+                            sunDirection: new THREE.Vector3(0, 0, 0),
+                            sunColor: 0xffffff,
+                            waterColor: 0x00bfff,
+                            distortionScale: 0.4
+                        });
+                        water.rotation.x = - Math.PI / 2;
+                        water.position.set(i * this.scaleSize, 0.01 , j * this.scaleSize);
+                        this.scene.add(water);
+                        this.waterObjectsList.push(water);
                         break;
                 }
-                const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
-                const mesh = new THREE.Mesh(geometry, material);
-                mesh.position.set(i * this.scaleSize, 0, j * this.scaleSize);
-                mesh.rotateX(Math.PI / 2);
-                this.scene.add(mesh);
+
+                if (this.maze[j + this.halfSize][i + this.halfSize] != this.MapTypes.WATER) {
+                    mesh.position.set(i * this.scaleSize, 0, j * this.scaleSize);
+                    mesh.rotateX(Math.PI / 2);
+                    this.scene.add(mesh);
+                }
             }
         }
     }
+
 
     placeObjects(name, list) {
         list.forEach(center => {
@@ -135,11 +158,11 @@ export class RandomGeneratedMap extends BaseMap {
         const middlePoints = [];
         for (let y = 0; y < this.maze.length; y++) {
             for (let x = 0; x < this.maze[y].length; x++) {
-                if (this.maze[y][x] === this.MapTypes.SCENE) {
-                    if (x > 0 && (this.maze[y][x - 1] === this.MapTypes.ROAD || this.maze[y][x - 1] === this.MapTypes.REWARD || this.maze[y][x - 1] === this.MapTypes.START)) {
+                if (this.maze[y][x] === this.MapTypes.LAND || this.maze[y][x] === this.MapTypes.WATER) {
+                    if (x === 0 || (x > 0 && (this.maze[y][x - 1] === this.MapTypes.ROAD || this.maze[y][x - 1] === this.MapTypes.REWARD || this.maze[y][x - 1] === this.MapTypes.START))) {
                         middlePoints.push({ x: (x - 0.65), y });
                     }
-                    if (x < this.maze[y].length - 1 && (this.maze[y][x + 1] === this.MapTypes.ROAD || this.maze[y][x + 1] === this.MapTypes.REWARD || this.maze[y][x + 1] === this.MapTypes.START)) {
+                    if (x === this.maze[y].length - 1 || (x < this.maze[y].length - 1 && (this.maze[y][x + 1] === this.MapTypes.ROAD || this.maze[y][x + 1] === this.MapTypes.REWARD || this.maze[y][x + 1] === this.MapTypes.START))) {
                         middlePoints.push({ x: (x + 0.35), y });
                     }
                 }
@@ -153,11 +176,11 @@ export class RandomGeneratedMap extends BaseMap {
 
         for (let y = 0; y < this.maze.length; y++) {
             for (let x = 0; x < this.maze[y].length; x++) {
-                if (this.maze[y][x] === 0) {
-                    if (y > 0 && (this.maze[y - 1][x] === this.MapTypes.ROAD || this.maze[y - 1][x] === this.MapTypes.REWARD || this.maze[y - 1][x] === this.MapTypes.START)) {
+                if (this.maze[y][x] === this.MapTypes.LAND || this.maze[y][x] === this.MapTypes.WATER) {
+                    if (y === 0 || (y > 0 && (this.maze[y - 1][x] === this.MapTypes.ROAD || this.maze[y - 1][x] === this.MapTypes.REWARD || this.maze[y - 1][x] === this.MapTypes.START))) {
                         middlePoints.push({ x, y: (y - 0.7) });
                     }
-                    if (y < this.maze.length - 1 && (this.maze[y + 1][x] === this.MapTypes.ROAD || this.maze[y + 1][x] === this.MapTypes.REWARD || this.maze[y + 1][x] === this.MapTypes.START)) {
+                    if (y === this.maze.length - 1 || (y < this.maze.length - 1 && (this.maze[y + 1][x] === this.MapTypes.ROAD || this.maze[y + 1][x] === this.MapTypes.REWARD || this.maze[y + 1][x] === this.MapTypes.START ))) {
                         middlePoints.push({ x, y: (y + 0.3) });
                     }
                 }
@@ -177,7 +200,7 @@ export class RandomGeneratedMap extends BaseMap {
                 
                 for (let i = -largehalfSize; i <= largehalfSize; i++) {
                     for (let j = -largehalfSize; j <= largehalfSize; j++) {
-                        if (this.maze[y + i][x + j] !== this.MapTypes.SCENE) {
+                        if (this.maze[y + i][x + j] !== this.MapTypes.LAND) {
                             isAllZero = false;
                             break;
                         }
@@ -188,7 +211,7 @@ export class RandomGeneratedMap extends BaseMap {
                 if (isAllZero) {
                     for (let i = -largehalfSize; i <= largehalfSize; i++) {
                         for (let j = -largehalfSize; j <= largehalfSize; j++) {
-                            this.maze[y + i][x + j] = this.MapTypes.UNDEFINED;
+                            this.maze[y + i][x + j] = this.MapTypes.WATER;
                         }
                     }
                     zones.push({ x, y });
@@ -196,6 +219,13 @@ export class RandomGeneratedMap extends BaseMap {
             }
         }
         return zones;
+    }
+
+    findWater() {
+        this.maze[27][27] = this.MapTypes.WATER;
+        this.maze[25][26] = this.MapTypes.WATER;
+        this.maze[26][25] = this.MapTypes.WATER;
+        this.maze[26][26] = this.MapTypes.WATER;
     }
 }
 

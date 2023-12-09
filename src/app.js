@@ -47,7 +47,6 @@ const ghost = new Ghost(map.scene, (gltf) => {
 });
 map.pushMovableObjects(ghost);
 
-console.log(ghost);
 const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 map.scene.add(light);
 
@@ -97,6 +96,9 @@ function animate() {
     camera.animate(ghost.object3D.position, ghost.object3D.rotation);
     for (let i = 0; i < fixedObjects.length; i++) {
         fixedObjects[i].animate();
+    }
+    for (let i = 0; i < map.waterObjectsList.length; i++) {
+        map.waterObjectsList[i].material.uniforms['time'].value += 1/60;
     }
     renderer.render(map.scene, camera.getCamera());
 }
