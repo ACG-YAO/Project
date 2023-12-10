@@ -4,13 +4,17 @@ import * as THREE from 'three';
 export class Ghost extends Protagonist {
     constructor(scene, onLoadCallback) {
         super();
-        this.move_speed = 0.05;
-        this.rotate_speed = 0.015;
+        this.move_speed = 0.08;
+        this.rotate_speed = 0.02;
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
             loader.load('Models/Enemy1.glb', (gltf) => {
                 this.initialize(gltf, scene, onLoadCallback, 0.5, 0.5, 0.5);
                 this.setupLayers(gltf);
+                this.mixer = new THREE.AnimationMixer(gltf.scene);
+                gltf.animations.forEach((clip) => {
+                    this.mixer.clipAction(clip).play();
+                });
                  resolve(gltf);
              }, undefined, (error) => {
                  reject(error);

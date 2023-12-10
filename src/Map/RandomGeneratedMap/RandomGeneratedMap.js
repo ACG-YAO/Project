@@ -222,10 +222,14 @@ export class RandomGeneratedMap extends BaseMap {
     }
 
     findWater() {
-        this.maze[27][27] = this.MapTypes.WATER;
-        this.maze[25][26] = this.MapTypes.WATER;
-        this.maze[26][25] = this.MapTypes.WATER;
-        this.maze[26][26] = this.MapTypes.WATER;
+        for (let i = 24; i <= 26; i++) {
+            for (let j = 24; j <= 26; j++) {
+                if (this.maze[i][j] === this.MapTypes.LAND) {
+                    this.maze[i][j] = this.MapTypes.WATER;
+                    return;
+                }
+            }
+        }
     }
 }
 
