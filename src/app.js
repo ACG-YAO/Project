@@ -44,12 +44,7 @@ map.scene.add(controls.getObject());
 
 
 const totaltime = 15000;
-const Finalscore = 1;
-
-const winIndicator = new WinIndicator();
 const loseIndicator = new LoseIndicator();
-
-const rewardcount = new Reward(Finalscore, winIndicator);
 const timeStamp = new TimeStamp(totaltime, loseIndicator);
 timeStamp.start();
 
