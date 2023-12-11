@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Ghost, Pumpkin, Fence, ReversedFence } from './Object';
 import { RandomGeneratedMap } from './Map';
 import { SwitchableCamera } from './Camera';
+import { TimeStamp, WinIndicator, LoseIndicator } from './utils';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -40,6 +41,17 @@ let cameraPosition = new THREE.Vector3(0, 0, 20);
 const camera = new SwitchableCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000, cameraOffset,cameraPosition);
 let controls = new PointerLockControls(camera.getCamera(), renderer.domElement);
 map.scene.add(controls.getObject());
+
+
+const totaltime = 15000;
+const Finalscore = 1;
+
+const winIndicator = new WinIndicator();
+const loseIndicator = new LoseIndicator();
+
+const rewardcount = new Reward(Finalscore, winIndicator);
+const timeStamp = new TimeStamp(totaltime, loseIndicator);
+timeStamp.start();
 
 const ghost = new Ghost(map.scene, (gltf) => {
     gltf.scene.position.set(0, 0, 0);
