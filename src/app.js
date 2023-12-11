@@ -5,6 +5,7 @@ import { SwitchableCamera } from './Camera';
 import { TimeStamp, WinIndicator, LoseIndicator } from './utils';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
+let locked = false;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -43,7 +44,7 @@ let controls = new PointerLockControls(camera.getCamera(), renderer.domElement);
 map.scene.add(controls.getObject());
 
 
-const totaltime = 15000;
+const totaltime = 1500000;
 const loseIndicator = new LoseIndicator();
 const timeStamp = new TimeStamp(totaltime, loseIndicator);
 timeStamp.start();
@@ -60,6 +61,31 @@ map.scene.add(light);
 const dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(1, 1, 1).normalize();
 map.scene.add(dirLight);
+
+window.addEventListener("load", function() {
+    document.getElementById("loadingScreen").style.display = 'none';
+    document.getElementById("backScreen").style.display = 'none';
+
+    document.getElementById("startButton").addEventListener("click", function() {
+        locked = false;
+        document.getElementById("startScreen").style.display = 'none';
+        document.getElementById("loadingScreen").style.display = 'flex';
+        setTimeout(function() {
+            document.getElementById("loadingScreen").style.display = 'none';
+        }, 2000); 
+    });
+
+    document.getElementById("ruleButton").addEventListener("click", function() {
+        document.getElementById("startScreen").style.display = 'none';
+        document.getElementById("backScreen").style.display = 'flex';
+    });
+
+    document.getElementById("backButton").addEventListener("click", function() {
+        document.getElementById("backScreen").style.display = 'none';
+        document.getElementById("startScreen").style.display = 'flex';
+    });
+
+});
 
 window.addEventListener('resize', function() {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -116,7 +142,9 @@ let loadPromises = map.getFixedObjects().map(object => {
 });
 
 Promise.all(loadPromises).then(() => {
-    animate(); 
+    if (locked === false){
+        animate(); 
+    }
 }).catch(error => {
     console.log(loadPromises);
     console.error("An error occurred while loading objects:", error);
