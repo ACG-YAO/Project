@@ -48,7 +48,7 @@ let controls = new PointerLockControls(camera.getCamera(), renderer.domElement);
 map.scene.add(controls.getObject());
 
 
-const totaltime = 150000;
+const totaltime = 600000;
 const loseIndicator = new LoseIndicator();
 const timeStamp = new TimeStamp(totaltime, loseIndicator);
 timeStamp.start();
@@ -111,6 +111,7 @@ function animate() {
     if (ghost.animate(map.scene, fixedObjects)) {
         goalMusic.play();
     }
+    map.updateAgentLocation(ghost.object3D.position);
     camera.animate(ghost.object3D.position, ghost.object3D.rotation);
     for (let i = 0; i < fixedObjects.length; i++) {
         fixedObjects[i].animate();

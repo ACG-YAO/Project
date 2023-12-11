@@ -6,6 +6,7 @@ export class RandomGeneratedMap extends BaseMap {
     constructor(mazeSize, numRewards, exclusionZoneSize, scaleSize) {
         super(mazeSize, numRewards, exclusionZoneSize, scaleSize);
         this.minimumDistance = 10;
+        this.displayDistance = 20;
         this.MapTypes = {
             LAND: 0,
             ROAD: 1,
@@ -14,6 +15,7 @@ export class RandomGeneratedMap extends BaseMap {
             WATER: 4
         };
         this.waterObjectsList = [];
+        this.agentLocation = null;
     }
 
     initialize() {
@@ -103,8 +105,8 @@ export class RandomGeneratedMap extends BaseMap {
                     case this.MapTypes.WATER:
                         const waterGeometry = new THREE.PlaneGeometry(this.scaleSize, this.scaleSize);
                         const water = new Water(waterGeometry, {
-                            textureWidth: 2048,
-                            textureHeight: 2048,
+                            textureWidth: 512,
+                            textureHeight: 512,
                             waterNormals: new THREE.TextureLoader().load('Textures/Water.jpg', function (texture) {
                                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                             }),
@@ -117,6 +119,7 @@ export class RandomGeneratedMap extends BaseMap {
                         water.position.set(i * this.scaleSize, 0.01 , j * this.scaleSize);
                         this.scene.add(water);
                         this.waterObjectsList.push(water);
+                        this.allObjectsList.push(water);
                         break;
                 }
 
@@ -124,6 +127,7 @@ export class RandomGeneratedMap extends BaseMap {
                     mesh.position.set(i * this.scaleSize, 0, j * this.scaleSize);
                     mesh.rotateX(Math.PI / 2);
                     this.scene.add(mesh);
+                    this.allObjectsList.push(mesh);
                 }
             }
         }
@@ -138,6 +142,7 @@ export class RandomGeneratedMap extends BaseMap {
             });
             while (!object.getLoadPromise()) { }
             this.fixedObjectsList.push(object);
+            this.allObjectsList.push(object);
         });
     }
 
@@ -158,11 +163,17 @@ export class RandomGeneratedMap extends BaseMap {
         const middlePoints = [];
         for (let y = 0; y < this.maze.length; y++) {
             for (let x = 0; x < this.maze[y].length; x++) {
+                if (x === 0) {
+                    middlePoints.push({ x: (x - 0.65), y });
+                }
+                if (x === this.maze[y].length - 1) {
+                    middlePoints.push({ x: (x + 0.35), y });
+                }
                 if (this.maze[y][x] === this.MapTypes.LAND || this.maze[y][x] === this.MapTypes.WATER) {
-                    if (x === 0 || (x > 0 && (this.maze[y][x - 1] === this.MapTypes.ROAD || this.maze[y][x - 1] === this.MapTypes.REWARD || this.maze[y][x - 1] === this.MapTypes.START))) {
+                    if (x > 0 && (this.maze[y][x - 1] === this.MapTypes.ROAD || this.maze[y][x - 1] === this.MapTypes.REWARD || this.maze[y][x - 1] === this.MapTypes.START)) {
                         middlePoints.push({ x: (x - 0.65), y });
                     }
-                    if (x === this.maze[y].length - 1 || (x < this.maze[y].length - 1 && (this.maze[y][x + 1] === this.MapTypes.ROAD || this.maze[y][x + 1] === this.MapTypes.REWARD || this.maze[y][x + 1] === this.MapTypes.START))) {
+                    if (x < this.maze[y].length - 1 && (this.maze[y][x + 1] === this.MapTypes.ROAD || this.maze[y][x + 1] === this.MapTypes.REWARD || this.maze[y][x + 1] === this.MapTypes.START)) {
                         middlePoints.push({ x: (x + 0.35), y });
                     }
                 }
@@ -176,11 +187,17 @@ export class RandomGeneratedMap extends BaseMap {
 
         for (let y = 0; y < this.maze.length; y++) {
             for (let x = 0; x < this.maze[y].length; x++) {
+                if (y === 0) {
+                    middlePoints.push({ x, y: (y - 0.7) });
+                }
+                if (y === this.maze.length - 1) {
+                    middlePoints.push({ x, y: (y + 0.3) });
+                }
                 if (this.maze[y][x] === this.MapTypes.LAND || this.maze[y][x] === this.MapTypes.WATER) {
-                    if (y === 0 || (y > 0 && (this.maze[y - 1][x] === this.MapTypes.ROAD || this.maze[y - 1][x] === this.MapTypes.REWARD || this.maze[y - 1][x] === this.MapTypes.START))) {
+                    if (y > 0 && (this.maze[y - 1][x] === this.MapTypes.ROAD || this.maze[y - 1][x] === this.MapTypes.REWARD || this.maze[y - 1][x] === this.MapTypes.START)) {
                         middlePoints.push({ x, y: (y - 0.7) });
                     }
-                    if (y === this.maze.length - 1 || (y < this.maze.length - 1 && (this.maze[y + 1][x] === this.MapTypes.ROAD || this.maze[y + 1][x] === this.MapTypes.REWARD || this.maze[y + 1][x] === this.MapTypes.START ))) {
+                    if (y < this.maze.length - 1 && (this.maze[y + 1][x] === this.MapTypes.ROAD || this.maze[y + 1][x] === this.MapTypes.REWARD || this.maze[y + 1][x] === this.MapTypes.START )) {
                         middlePoints.push({ x, y: (y + 0.3) });
                     }
                 }
@@ -189,7 +206,7 @@ export class RandomGeneratedMap extends BaseMap {
         return middlePoints;
     }
 
-    findLargeArea() {
+    findWater() {
         const zones = [];
         const largesize = 2;
         const largehalfSize = Math.floor(largesize / 2);
@@ -221,7 +238,7 @@ export class RandomGeneratedMap extends BaseMap {
         return zones;
     }
 
-    findWater() {
+    /*findWater() {
         for (let i = 24; i <= 26; i++) {
             for (let j = 24; j <= 26; j++) {
                 if (this.maze[i][j] === this.MapTypes.LAND) {
@@ -230,6 +247,41 @@ export class RandomGeneratedMap extends BaseMap {
                 }
             }
         }
+    }*/
+
+    processDisplayOfObjects() {
+        this.allObjectsList.forEach(object => {
+            if (object.object3D) {
+                const distance = Math.sqrt(Math.pow(object.object3D.position.x - this.agentLocation.x, 2) + Math.pow(object.object3D.position.z - this.agentLocation.z, 2));
+
+                if (distance <= this.displayDistance) {
+                    if (!this.scene.children.includes(object.object3D)) {
+                        this.scene.add(object.object3D);
+                    }
+                } else {
+                    if (this.scene.children.includes(object.object3D)) {
+                        this.scene.remove(object.object3D);
+                    }
+                }
+            } else {
+                const distance = Math.sqrt(Math.pow(object.position.x - this.agentLocation.x, 2) + Math.pow(object.position.z - this.agentLocation.z, 2));
+
+                if (distance <= this.displayDistance) {
+                    if (!this.scene.children.includes(object)) {
+                        this.scene.add(object);
+                    }
+                } else {
+                    if (this.scene.children.includes(object)) {
+                        this.scene.remove(object);
+                    }
+                }
+            }
+        });
+    }
+
+    updateAgentLocation(newLocation) {
+        this.agentLocation = newLocation;
+        this.processDisplayOfObjects();
     }
 }
 

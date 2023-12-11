@@ -7,7 +7,7 @@ export class FirstPersonPerspectiveCamera extends Group {
     }
 
     animate(position, rotation) {
-        this.camera.position.set(position.x, position.y + 1, position.z);
+        this.camera.position.set(position.x, position.y + 0.75, position.z);
         this.camera.rotation.set(rotation.x, rotation.y + Math.PI, rotation.z);
     }
 }

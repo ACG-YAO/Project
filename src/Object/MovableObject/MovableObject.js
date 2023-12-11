@@ -67,7 +67,6 @@ export class MovableObject extends BaseObject {
             if (boundingBox.intersectsBox(objectBoundingBox)) {
                 if (object.reward) {
                     object.disappear();
-                    scene.remove(object.object3D);
                     rewardDetected = true;
                 }
             }
