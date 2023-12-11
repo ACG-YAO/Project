@@ -14,17 +14,22 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
 
-// Load audio
-// var listener = new THREE.AudioListener();
-// camera.add( listener );
-// var sound = new THREE.Audio( listener );
-// var audioLoader = new THREE.AudioLoader();
-// audioLoader.load( 'Audio/meow.mp3', function( buffer ) {
-//     sound.setBuffer( buffer );
-//     sound.setLoop( true );
-//     sound.setVolume( 0.5 );
-//     sound.pause();
-// });
+var listener = new THREE.AudioListener();
+var audioLoader = new THREE.AudioLoader();
+var backgroundMusic = new THREE.Audio(listener);
+var goalMusic = new THREE.Audio(listener);
+audioLoader.load('Audio/background.mp3', function (buffer) {
+    backgroundMusic.setBuffer(buffer);
+    backgroundMusic.setLoop(true);
+    backgroundMusic.setVolume(1.0);
+    backgroundMusic.play();
+ });
+
+audioLoader.load('Audio/goal.mp3', function (buffer) {
+    goalMusic.setBuffer(buffer);
+    goalMusic.setLoop(false);
+    goalMusic.setVolume(1.0);
+});
 
 const mazeSize = 50;
 const numRewards = 18;
@@ -44,7 +49,7 @@ let controls = new PointerLockControls(camera.getCamera(), renderer.domElement);
 map.scene.add(controls.getObject());
 
 
-const totaltime = 1500000;
+const totaltime = 600000;
 const loseIndicator = new LoseIndicator();
 const timeStamp = new TimeStamp(totaltime, loseIndicator);
 timeStamp.start();
@@ -94,6 +99,10 @@ window.addEventListener('resize', function() {
 });
 document.addEventListener('click', function () {
     controls.lock();
+    if (backgroundMusic.context.state === 'suspended') {
+        backgroundMusic.context.resume();
+        backgroundMusic.play(); 
+    }
 }, false);
 
 
@@ -125,7 +134,10 @@ function animate() {
         fixedObjects[i].updateBoundary();
     }
     requestAnimationFrame(animate);
-    ghost.animate(map.scene, fixedObjects);
+    if (ghost.animate(map.scene, fixedObjects)) {
+        goalMusic.play();
+    }
+    map.updateAgentLocation(ghost.object3D.position);
     camera.animate(ghost.object3D.position, ghost.object3D.rotation);
     for (let i = 0; i < fixedObjects.length; i++) {
         fixedObjects[i].animate();

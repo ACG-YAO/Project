@@ -45,13 +45,14 @@ export class Protagonist extends MovableObject {
     animate(scene, objectsList) {
         if (this.boundingBoxHelper === null)
             this.check(scene);
-        this.checkCollision(scene, objectsList);
+        let rewardDetected = this.checkCollision(scene, objectsList);
         this.handleMovement(objectsList);
         this.updateBoundingBoxHelper();
         if (this.mixer) {
             const delta = this.clock.getDelta();
             this.mixer.update(delta);
         }
+        return rewardDetected;
     }
 
 }

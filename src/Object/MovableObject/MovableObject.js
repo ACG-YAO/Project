@@ -21,9 +21,10 @@ export class MovableObject extends BaseObject {
     animate(scene, objectsList) {
         if (this.boundingBoxHelper === null)
             this.check(scene);
-        this.checkCollision(scene, objectsList);
+        let rewardDetected = this.checkCollision(scene, objectsList);
         this.handleMovement(objectsList);
         this.updateBoundingBoxHelper();
+        return rewardDetected;
     }
 
     handleMovement(objectsList) {
@@ -60,15 +61,17 @@ export class MovableObject extends BaseObject {
         const max = this.object3D.position.clone().add(new THREE.Vector3(halfSize, 2 * halfSize, halfSize));
         const boundingBox = new THREE.Box3(min, max);
 
+        let rewardDetected = false;
         objectsList.forEach((object) => {
             const objectBoundingBox = new THREE.Box3().setFromObject(object.object3D);
             if (boundingBox.intersectsBox(objectBoundingBox)) {
                 if (object.reward) {
                     object.disappear();
-                    scene.remove(object.object3D);
+                    rewardDetected = true;
                 }
             }
         });
+        return rewardDetected;
     }
 
     willCollide(potentialPosition, potentialRotation, objectsList) {

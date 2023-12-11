@@ -12,6 +12,7 @@ export class Reward extends FixedObject {
 
     disappear() {
         this.reward = false;
+        this.object3D.visible = false;
         Reward.score++;
         this.updateScoreDisplay();
         this.displaywin();

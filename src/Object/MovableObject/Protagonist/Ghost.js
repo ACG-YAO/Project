@@ -4,8 +4,8 @@ import * as THREE from 'three';
 export class Ghost extends Protagonist {
     constructor(scene, onLoadCallback) {
         super();
-        this.move_speed = 0.08;
-        this.rotate_speed = 0.02;
+        this.move_speed = 0.06;
+        this.rotate_speed = 0.015;
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
             loader.load('Models/Enemy1.glb', (gltf) => {

@@ -8,10 +8,7 @@ export class ReversedFence extends Obstacles {
             const loader = new GLTFLoader();
             loader.load('Models/Fence.glb', (gltf) => {
                 this.initialize(gltf, scene, onLoadCallback, 8, 3, 2);
-                
-                // Rotate the model by 90 degrees around the Y axis
-                gltf.scene.rotation.y = Math.PI / 2; // Math.PI / 2 is 90 degrees in radians
-
+                gltf.scene.rotation.y = Math.PI / 2; 
                 resolve(gltf);
             }, undefined, (error) => {
                 reject(error);

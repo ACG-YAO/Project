@@ -13,6 +13,7 @@ export class BaseMap extends Group {
         this.scene = new THREE.Scene();
         this.fixedObjectsList = [];
         this.movableObjectsList = [];
+        this.allObjectsList = [];
         this.Protagonist = null;
         this.Fence = null;
         this.ReversedFence = null;
