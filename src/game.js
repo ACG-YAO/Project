@@ -34,7 +34,7 @@ export class Game {
         this.numRewards = 18;
         this.exclusionZoneSize = 5;
         this.scaleSize = 4;
-        this.totaltime = 3000;
+        this.totaltime = 600000;
         this.animate = this.animate.bind(this);
         this.finalScore = 19;
     }
