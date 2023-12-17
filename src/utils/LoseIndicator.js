@@ -10,7 +10,7 @@ export class LoseIndicator {
         
         setTimeout(() => {
             this.gameOverImage.style.display = 'block'; 
-        }, 3000); 
+        }, 100); 
     }
 }
 
