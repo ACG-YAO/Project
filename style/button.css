@@ -1,3 +1,15 @@
+.button-container {
+  display: flex;
+  flex-direction: column; /* This stacks the buttons vertically */
+  align-items: center; /* This centers the buttons horizontally */
+  justify-content: space-around;
+}
+
+.button-container button {
+  margin: 5px; /* This adds space between the buttons */
+  /* Add more button styling as needed */
+}
+
 button {
     display: flex;
     align-items: center;

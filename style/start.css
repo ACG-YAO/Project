@@ -37,28 +37,81 @@ html, body {
   display: grid;
   place-content: center;
 }
-
-.text-body {
-  margin-top: -35px;
-  color: #ff8d79;
-  text-align: center;
+.color-container {
+  height: 400px;
+  width: 700px;
+  border-radius: 1em;
+  overflow: hidden;
+  box-shadow: 0 10px 20px #dbdbdb;
+  font-family: sans-serif;
 }
 
-.text-title {
-  margin-top: -125px;
-  color: #ff4d7d;
-  font-size: 1.75em;
-  font-weight: bold;
-  text-align: center;
+.palette {
+  display: flex;
+  height: 86%;
+  width: 100%;
 }
 
-.sunsetsvg {
-  width: 313px;
-  margin-left: -51.9px;
-  margin-top: -165px;
-  fill: black;
+.color {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: flex 0.1s linear;
 }
 
-#sun {
-  fill: url(#MyGradient);
+.color span {
+  opacity: 0;
+  transition: opacity 0.1s linear;
+  padding-left: 20px;
+}
+
+.color:nth-child(1) {
+  background: #264653;
+}
+
+.color:nth-child(2) {
+  background: #2a9d8f;
+}
+
+.color:nth-child(3) {
+  background: #e9c46a;
+}
+
+.color:nth-child(4) {
+  background: #f4a261;
+}
+
+.color:nth-child(5) {
+  background: #e76f51;
+}
+
+.color:hover {
+  flex: 2;
+  box-shadow: rgba(28, 28, 30, 0.2) 0px 7px 29px 0px;
+}
+
+.color:hover span {
+  opacity: 1;
+}
+
+#stats {
+  height: 50%;
+  width: 100%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5em;
+  box-sizing: border-box;
+  color: #170808;
+}
+
+#stats svg {
+  fill: #110808;
+  transform: scale(1.2);
 }

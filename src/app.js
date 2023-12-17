@@ -69,7 +69,14 @@ map.scene.add(dirLight);
 
 window.addEventListener("load", function() {
     document.getElementById("loadingScreen").style.display = 'none';
+    document.getElementById("startScreen").style.display = 'none';
     document.getElementById("backScreen").style.display = 'none';
+    document.getElementById("ruleScreen").style.display = 'none';
+    
+    document.getElementById("enterButton").addEventListener("click", function() {
+        document.getElementById("titleScreen").style.display = 'none';
+        document.getElementById("startScreen").style.display = 'flex';
+    });
 
     document.getElementById("startButton").addEventListener("click", function() {
         locked = false;
@@ -82,10 +89,20 @@ window.addEventListener("load", function() {
 
     document.getElementById("ruleButton").addEventListener("click", function() {
         document.getElementById("startScreen").style.display = 'none';
+        document.getElementById("ruleScreen").style.display = 'flex';
+    });
+
+    document.getElementById("nextButton").addEventListener("click", function() {
+        document.getElementById("ruleScreen").style.display = 'none';
         document.getElementById("backScreen").style.display = 'flex';
     });
 
-    document.getElementById("backButton").addEventListener("click", function() {
+    document.getElementById("backButton1").addEventListener("click", function() {
+        document.getElementById("ruleScreen").style.display = 'none';
+        document.getElementById("startScreen").style.display = 'flex';
+    });
+
+    document.getElementById("backButton2").addEventListener("click", function() {
         document.getElementById("backScreen").style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
     });
