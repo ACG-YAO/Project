@@ -23,7 +23,9 @@ export class Game {
             this.backgroundMusic.setBuffer(buffer);
             this.backgroundMusic.setLoop(true);
             this.backgroundMusic.setVolume(1.0);
-            this.backgroundMusic.play();
+            if (this.audio === 'on'){
+                this.backgroundMusic.play();
+            }
         });
         this.audioLoader.load('Audio/goal.mp3', (buffer) => {
             this.goalMusic.setBuffer(buffer);
@@ -37,6 +39,16 @@ export class Game {
         this.totaltime = 600000;
         this.animate = this.animate.bind(this);
         this.finalScore = 19;
+        this.control = {
+            'forward': 'KeyW',
+            'backward': 'KeyS',
+            'left': 'KeyA',
+            'right': 'KeyD',
+            'map': 'KeyM',
+            'pause': 'KeyL',
+            'changeview': 'KeyR'
+        };
+        this.audio = 'on';
     }
 
     initialize() {
@@ -69,6 +81,28 @@ export class Game {
         this.dirLight.position.set(1, 1, 1).normalize();
         this.map.scene.add(this.dirLight);
         this.playing = true;
+        this.resetController();
+    }
+
+    resetController() {
+        if (this.camera) {
+            this.camera.resetController(this.control['map'], this.control['changeview']);
+        }
+        if (this.ghost) {
+            this.ghost.resetController(this.control['forward'], this.control['backward'], this.control['left'], this.control['right']);
+        }
+    }
+
+    pauseAllMedia() {
+        if (this.backgroundMusic.isPlaying) {
+            this.backgroundMusic.pause();
+        }
+    }
+
+    toggleSounds() {
+        if (!this.backgroundMusic.isPlaying) {
+            this.backgroundMusic.play();
+        }
     }
 
     disposeObject(obj) {
@@ -126,7 +160,9 @@ export class Game {
             if (this.ghost.animate(this.map.scene, fixedObjects)) {
                 this.score++;
                 document.getElementById('score').textContent = this.score;
-                this.goalMusic.play();
+                if (this.audio === 'on'){
+                    this.goalMusic.play();
+                }
             }
             this.map.updateAgentLocation(this.ghost.object3D.position);
             this.camera.animate(this.ghost.object3D.position, this.ghost.object3D.rotation);

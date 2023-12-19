@@ -6,20 +6,31 @@ export class Protagonist extends MovableObject {
         super();
         this.mixer = null;
         this.clock = new THREE.Clock();
+        this.control_forward = 'KeyW';
+        this.control_backward = 'KeyS';
+        this.control_left = 'KeyA';
+        this.control_right = 'KeyD';
+    }
+
+    resetController(control_forward, control_backward, control_left, control_right) {
+        this.control_forward = control_forward;
+        this.control_backward = control_backward;
+        this.control_left = control_left;
+        this.control_right = control_right;
     }
 
     KeyDownHandler(event) {
         switch (event.code) {
-        case 'KeyW':
+        case this.control_forward:
             this.moveForward = true;
             break;
-        case 'KeyS':
+        case this.control_backward:
             this.moveBackward = true;
             break;
-        case 'KeyA':
+        case this.control_left:
             this.turnLeft = true;
             break;
-        case 'KeyD':
+        case this.control_right:
             this.turnRight = true;
             break;
         }   
@@ -27,16 +38,16 @@ export class Protagonist extends MovableObject {
 
     KeyUpHandler(event) {
         switch (event.code) {
-        case 'KeyW':
+        case this.control_forward:
             this.moveForward = false;
             break;
-        case 'KeyS':
+        case this.control_backward:
             this.moveBackward = false;
             break;
-        case 'KeyA':
+        case this.control_left:
             this.turnLeft = false;
             break;
-        case 'KeyD':
+        case this.control_right:
             this.turnRight = false;
             break;
             }

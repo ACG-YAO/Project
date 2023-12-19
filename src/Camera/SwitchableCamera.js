@@ -12,6 +12,13 @@ export class SwitchableCamera extends Group {
         this.topDownCamera = new TopDownCamera(fov, aspect, near, far, position);
         this.is_first = false;
         this.is_map = false;
+        this.control_map = 'KeyM';
+        this.control_view = 'KeyR';
+    }
+    
+    resetController(map, changeview) {
+        this.control_map = map;
+        this.control_view = changeview;
     }
 
     getCamera() {
@@ -51,14 +58,14 @@ export class SwitchableCamera extends Group {
     }
 
     KeyDownHandler(event) {
-        if (event.code === 'KeyR')
+        if (event.code === this.control_view)
             this.is_first = !this.is_first;
-        if (event.code === 'KeyM')
+        if (event.code === this.control_map)
             this.is_map = true;
     }
 
     KeyUpHandler(event) {
-        if (event.code === 'KeyM')
+        if (event.code === this.control_map)
             this.is_map = false;
     }
 }

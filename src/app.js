@@ -6,6 +6,7 @@ window.addEventListener("load", function() {
     document.getElementById("startScreen").style.display = 'none';
     document.getElementById("ruleScreen").style.display = 'none';
     document.getElementById("settingScreen").style.display = 'none';
+    document.getElementById("menuScreen").style.display = 'none';
     document.getElementById("enterButton").addEventListener("click", function() {
         document.getElementById("titleScreen").style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
@@ -40,8 +41,161 @@ window.addEventListener("load", function() {
             game.start();
         }, 2000);
     });
-    document.getElementById('settingButton').addEventListener('click', () => {
-        // Implement additional settings logic
+    let enter_setting = 0;
+    document.getElementById('settingButton1').addEventListener('click', () => {
+        document.getElementById('settingScreen').style.display = 'none';
+        document.getElementById("invaliderror").style.display = 'none';
+        document.getElementById("repeaterror").style.display = 'none';
+        enter_setting = 1;
+        document.getElementById('menuScreen').style.display = 'flex';
+    });
+    document.getElementById('settingButton2').addEventListener('click', () => {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById("invaliderror").style.display = 'none';
+        document.getElementById("repeaterror").style.display = 'none';
+        enter_setting = 2;
+        document.getElementById('menuScreen').style.display = 'flex';
+    });
+
+   // JavaScript
+    let activeButton = null;
+    // Create a dictionary to hold the button ID and its assigned key
+    let buttonKeyMapping = {
+        'forward': 'KeyW',
+        'backward': 'KeyS',
+        'left': 'KeyA',
+        'right': 'KeyD',
+        'map': 'KeyM',
+        'pause': 'KeyL',
+        'changeview': 'KeyR'
+    };
+    let audio_control = 'on';
+    let audioButtonInner = document.querySelector('#audio .inner');
+    audioButtonInner.textContent = 'On'; // Initialize as 'Off'
+    audioButtonInner.classList.add('on'); // Add the 'off' class for styling
+    function toggleActiveState(clickedButton) {
+        // Special case for the 'audio' button
+        if (clickedButton.id === 'audio') {
+            // Toggle between 'on' and 'off'
+            let innerDiv = clickedButton.querySelector('.inner');
+            if (audio_control === 'off') {
+                innerDiv.textContent = 'On';
+                audio_control = 'on';
+                innerDiv.classList.replace('off', 'on');
+                game.toggleSounds();
+            } else {
+                innerDiv.textContent = 'Off';
+                audio_control = 'off';
+                innerDiv.classList.replace('on', 'off');
+                game.pauseAllMedia();
+            }
+            return; // Return early so no other logic is applied to the 'audio' button
+        }
+
+        // If the clicked button is already active, deactivate it and remove the key listener
+        if (activeButton === clickedButton) {
+            clickedButton.classList.remove('active');
+            document.removeEventListener('keydown', changeButtonText);
+            activeButton = null;
+        } else {
+            // If there is a different active button, remove the active class from it
+            // and remove the key listener from the old active button
+            if (activeButton) {
+                activeButton.classList.remove('active');
+                document.removeEventListener('keydown', changeButtonText);
+            }
+            // Add the active class to the clicked button and set it as the new activeButton
+            clickedButton.classList.add('active');
+            activeButton = clickedButton;
+            document.addEventListener('keydown', changeButtonText);
+        }
+    }
+
+    function changeButtonText(event) {
+        if (!activeButton) return;  
+
+        var keyName = event.key;
+        var innerDiv = activeButton.querySelector('.inner');
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(event.key)) {
+            event.preventDefault();
+        }
+        if (keyName === 'ArrowUp') {
+            innerDiv.textContent = '↑';
+            buttonKeyMapping[activeButton.id] = 'ArrowUp';
+        } else if (keyName === 'ArrowDown') {
+            innerDiv.textContent = '↓';
+            buttonKeyMapping[activeButton.id] = 'ArrowDown';
+        } else if (keyName === 'ArrowLeft') {
+            innerDiv.textContent = '←';
+            buttonKeyMapping[activeButton.id] = 'ArrowLeft';
+        } else if (keyName === 'ArrowRight') {
+            innerDiv.textContent = '→';
+            buttonKeyMapping[activeButton.id] = 'ArrowRight';
+        } else if (keyName === ' ') {
+            innerDiv.textContent = '[space]';
+            buttonKeyMapping[activeButton.id] = event.code;
+        } else if (keyName.length === 1) {
+            innerDiv.textContent = keyName.toUpperCase();
+            buttonKeyMapping[activeButton.id] = event.code;
+        } else {
+            document.getElementById("invaliderror").style.display = 'flex';
+            setTimeout(function() {
+                document.getElementById("invaliderror").style.display = 'none';
+            }, 2000); // Time in milliseconds
+        }
+    }
+
+    // Attach the event to each custom checkbox button
+    document.querySelectorAll('.customCheckBox').forEach(button => {
+        button.addEventListener('click', function() {
+            toggleActiveState(this);
+        });
+    });
+    function checkForDuplicateValues(mapping) {
+        let valueCounts = {};
+        let duplicates = [];
+        for (let key in mapping) {
+            if (mapping.hasOwnProperty(key)) {
+                let value = mapping[key];
+                valueCounts[value] = (valueCounts[value] || 0) + 1;
+            }
+        }
+        for (let value in valueCounts) {
+            if (valueCounts.hasOwnProperty(value) && valueCounts[value] > 1) {
+                duplicates.push(value);
+            }
+        }
+        return duplicates.length > 0 ? duplicates : true;
+    }
+
+    document.getElementById("backButton3").addEventListener("click", function() {
+        let check = checkForDuplicateValues(buttonKeyMapping);
+        if (activeButton) {
+            activeButton.classList.remove('active');
+            document.removeEventListener('keydown', changeButtonText);
+            activeButton = null;
+        }
+        if (check === true) {
+            game.control = buttonKeyMapping;
+            game.audio = audio_control;
+            game.resetController();
+            if (enter_setting === 1) {
+                document.getElementById("menuScreen").style.display = 'none';
+                document.getElementById("settingScreen").style.display = 'flex';
+                enter_setting = 0;
+            } else if (enter_setting === 2) {
+                document.getElementById("menuScreen").style.display = 'none';
+                document.getElementById("startScreen").style.display = 'flex';
+                enter_setting = 0;
+            }
+
+        } else {
+            document.getElementById("repeaterror").style.display = 'flex';
+            setTimeout(function() {
+                document.getElementById("repeaterror").style.display = 'none';
+            }, 2000); // Time in milliseconds
+        }
+
     });
 });
 window.addEventListener('resize', function() {
@@ -51,7 +205,7 @@ document.addEventListener('click', function () {
     game.MouseClickHandler();
 }, false);
 document.addEventListener('keydown', (event) => {
-    if (event.code === 'KeyL' && game.locked == false) {
+    if (event.code === game.control['pause'] && game.locked == false) {
         document.getElementById('settingScreen').style.display = 'flex';
         game.pause();
     }
