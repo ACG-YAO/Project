@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Ghost, Pumpkin, Fence, ReversedFence } from './Object';
 import { RandomGeneratedMap } from './Map';
 import { SwitchableCamera } from './Camera';
-import { TimeStamp, LoseIndicator } from './utils';
+import { TimeStamp, LoseIndicator, WinIndicator } from './utils';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
 export class Game {
@@ -19,18 +19,28 @@ export class Game {
         this.audioLoader = new THREE.AudioLoader();
         this.backgroundMusic = new THREE.Audio(this.listener);
         this.goalMusic = new THREE.Audio(this.listener);
+        this.winMusic = new THREE.Audio(this.listener);
+        this.loseMusic = new THREE.Audio(this.listener);
         this.audioLoader.load('Audio/background.mp3', (buffer) => {
             this.backgroundMusic.setBuffer(buffer);
             this.backgroundMusic.setLoop(true);
             this.backgroundMusic.setVolume(1.0);
-            if (this.audio === 'on'){
-                this.backgroundMusic.play();
-            }
+            this.backgroundMusic.play();
         });
         this.audioLoader.load('Audio/goal.mp3', (buffer) => {
             this.goalMusic.setBuffer(buffer);
             this.goalMusic.setLoop(false);
             this.goalMusic.setVolume(1.0);
+        });
+        this.audioLoader.load('Audio/win.mp3', (buffer) => {
+            this.winMusic.setBuffer(buffer);
+            this.winMusic.setLoop(false);
+            this.winMusic.setVolume(5.0);
+        });
+        this.audioLoader.load('Audio/lose.mp3', (buffer) => {
+            this.loseMusic.setBuffer(buffer);
+            this.loseMusic.setLoop(false);
+            this.loseMusic.setVolume(1.0);
         });
         this.mazeSize = 50;
         this.numRewards = 18;
@@ -68,7 +78,8 @@ export class Game {
         this.camera = new SwitchableCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000, this.cameraOffset, this.cameraPosition);
         this.controls = new PointerLockControls(this.camera.getCamera(), this.renderer.domElement);
         this.map.scene.add(this.controls.getObject());
-        this.loseIndicator = new LoseIndicator();
+        this.loseIndicator = new LoseIndicator(this.audio, this.loseMusic, this.backgroundMusic);
+        this.winIndicator = new WinIndicator();
         this.timeStamp = new TimeStamp(this.totaltime, this.loseIndicator, this.lock.bind(this));
         this.ghost = new Ghost(this.map.scene, (gltf) => {
             gltf.scene.position.set(0, 0, 0);
@@ -148,6 +159,7 @@ export class Game {
         this.dirLight = null;
         this.timeStamp = null;
         this.loseIndicator = null;
+        this.winIndicator = null;
         this.map = null;
     }
 
@@ -162,6 +174,20 @@ export class Game {
                 document.getElementById('score').textContent = this.score;
                 if (this.audio === 'on'){
                     this.goalMusic.play();
+                }
+                if (this.score === this.finalScore) {
+                    this.locked = true;
+                    this.controls.unlock();
+                    this.winIndicator.display();
+                    if (this.audio === 'on'){
+                        this.backgroundMusic.pause();
+                        setTimeout(() => {
+                            this.winMusic.play();
+                        }, 1000);
+                        setTimeout(() => {
+                            this.backgroundMusic.play();
+                        }, 5000);
+                    }
                 }
             }
             this.map.updateAgentLocation(this.ghost.object3D.position);

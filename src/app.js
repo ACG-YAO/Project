@@ -18,7 +18,7 @@ window.addEventListener("load", function() {
         setTimeout(function() {
             document.getElementById("loadingScreen").style.display = 'none';
             game.start();
-        }, 2000); 
+        }, 200); 
     });
     document.getElementById("ruleButton").addEventListener("click", function() {
         document.getElementById("startScreen").style.display = 'none';
@@ -32,8 +32,16 @@ window.addEventListener("load", function() {
         document.getElementById('settingScreen').style.display = 'none';
         game.resume();
     });
-    document.getElementById('restartButton').addEventListener('click', () => {
+    document.getElementById('restartButton1').addEventListener('click', () => {
         document.getElementById('settingScreen').style.display = 'none';
+        document.getElementById("startScreen").style.display = 'flex';
+    });
+    document.getElementById('restartButton2').addEventListener('click', () => {
+        document.getElementById('lose-indicator').style.display = 'none';
+        document.getElementById("startScreen").style.display = 'flex';
+    });
+    document.getElementById('restartButton3').addEventListener('click', () => {
+        document.getElementById('win-indicator').style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
     });
     let enter_setting = 0;
@@ -78,11 +86,13 @@ window.addEventListener("load", function() {
                 audio_control = 'on';
                 innerDiv.classList.replace('off', 'on');
                 game.toggleSounds();
+                game.loseIndicator.audio = 'on';
             } else {
                 innerDiv.textContent = 'Off';
                 audio_control = 'off';
                 innerDiv.classList.replace('on', 'off');
                 game.pauseAllMedia();
+                game.loseIndicator.audio = 'off';
             }
             return; // Return early so no other logic is applied to the 'audio' button
         }

@@ -1,16 +1,17 @@
 .settingcard {
-    width: 60%;
-    height: 80%;
-    margin: 30px;
-    background: #ecf39e;
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    color: #31572c;
-    border-radius: 15px;
-    box-shadow: -20px 20px 0px -5px #31572c;
-    flex-direction: column;
-  }
+  width: 60%; /* You may want to keep this as a percentage */
+  height: 80vh; /* This will make the height responsive to the screen size */
+  margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
+  background: #ecf39e;
+  padding: 1vw; /* Padding responsive to the width of the screen */
+  display: flex;
+  flex-wrap: wrap;
+  color: #31572c;
+  border-radius: 1vw; /* Make border-radius responsive */
+  box-shadow: -1vw 1vw 0vh -0.25vw #31572c;
+  flex-direction: column;
+  /* align-items: center; Center children */
+}
   
   .setting-container {
       display: flex;
@@ -25,7 +26,7 @@
   }
   .settingtitle {
     font-weight: 900;
-    font-size: 1.7em;
+    font-size: 6vh;
   }
   
   .tag-container {
@@ -38,21 +39,21 @@
   .tag__name {
     display: inline-block;
     color: #fff;
-    font-size: 1.1em;
+    font-size: 3.5vh;
     background-color: #31572c;
-    padding: 6px 23px 9px;
-    border-radius: 70em;
-    margin: 8px 6px 8px 0;
-    margin-left: 0px;
+    padding: 1vh 5vh 2vh;
+    border-radius: 50vh;
+    margin: 2vh 3vh 2vh 0;
+    margin-left: 0vh;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    min-width: 100px; /* Adjust as needed */
-    height: 30%; /* Adjust as needed */
+    min-width: 20vh; /* Adjust as needed */
+    height: 4vh; /* Adjust as needed */
 
     /* Center the text */
     text-align: center;
-    line-height: 30px; 
+    line-height: 5vh; 
   }
   
   .tag__name::before,
@@ -61,18 +62,18 @@
     display: inline-block;
     position: absolute;
     top: 40%;
-    width: 7px;
-    height: 7px;
+    width: 1.5vh;
+    height: 1.5vh;
     border-radius: 50%;
     background: #90a955;
   }
   
   .tag__name::before {
-    left: 7px;
+    left: 1.5vh;
   }
   
   .tag__name::after {
-    right: 7px;
+    right: 1.5vh;
   }
   
   /* .tag__name:hover {
@@ -83,7 +84,7 @@
   
   
   .customCheckBoxHolder {
-      margin: 5px;
+      margin: 1vh;
       display: flex;
     }
     
@@ -93,53 +94,53 @@
       overflow: hidden;
       cursor: pointer;
       user-select: none;
-      padding: 2px 8px;
+      padding: 1vh 6vh;
       background-color: rgba(0, 0, 0, 0.16);
-      border-radius: 0px;
+      border-radius: 0vh;
       color: rgba(255, 255, 255, 0.7);
       transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
       transition-duration: 300ms;
       transition-property: color, background-color, box-shadow;
       display: flex;
-      height: 32px;
+      height: 4vh;
       align-items: center;
-      box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+      box-shadow: rgba(0, 0, 0, 0.15) 0vh 0.5vh 0.25vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh 0.25vh 0.25vh 0vh;
       outline: none;
       justify-content: center;
-      min-width: 55px;
+      min-width: 13vh;
     }
     
     .customCheckBox:hover {
       background-color: #9bbb64;
       color: white;
-      box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+      box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
     }
     
     .customCheckBox .inner {
-      font-size: 18px;
+      font-size: 4vh;
       font-weight: 900;
       pointer-events: none;
       transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
       transition-duration: 300ms;
       transition-property: transform;
-      transform: translateY(0px);
+      transform: translateY(0vh);
     }
     
     .customCheckBox:hover .inner {
-      transform: translateY(-2px);
+      transform: translateY(-);
     }
     
     /* Multiple Checkboxes can be chained together for a radio input */
     .customCheckBoxWrapper:first-of-type .customCheckBox {
-      border-bottom-left-radius: 5px;
-      border-top-left-radius: 5px;
-      border-right: 0px;
+      border-bottom-left-radius: 1vh;
+      border-top-left-radius: 1vh;
+      border-right: 0vh;
     }
     
     .customCheckBoxWrapper:last-of-type .customCheckBox {
-      border-bottom-right-radius: 5px;
-      border-top-right-radius: 5px;
-      border-left: 0px;
+      border-bottom-right-radius: 1vh;
+      border-top-right-radius: 1vh;
+      border-left: 0vh;
     }
     
     .customCheckBoxInput {
@@ -148,22 +149,22 @@
     .customCheckBox.active {
       background-color: #2d6737;
       color: white;
-      box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+      box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
   }
   
   /* Adjust the .inner div when .customCheckBox is active */
   .customCheckBox.active .inner {
-      transform: translateY(-2px);
+      transform: translateY(-0.5vh);
   }
   
   /* Style for when an active .customCheckBox is hovered */
   .customCheckBox.active:hover {
       background-color: #34723f;
-      box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
+      box-shadow: rgba(0, 0, 0, 0.26) 0vh -1vh 0.25vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.15) 0vh 0.75vh 1.5vh 0.5vh;
   }
   
   .customCheckBox:not(.active):hover .inner {
-      transform: translateY(-2px);
+      transform: translateY(-0.5vh);
   }
   
   .customCheckBox .inner.on {
@@ -177,24 +178,24 @@
   .error {
     position: fixed;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    width: 320px;
-    padding: 12px;
+    width: 80vh;
+    padding: 1.4vh;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: start;
     background: #EF665B;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px -3px #111;
+    border-radius: 2vh;
+    box-shadow: 0vh 0vh 1.3vh -0.8vh #111;
     z-index: 9999; 
-    top: 30px; /* Align to the top of the viewport */
+    top: 3vh; /* Align to the top of the viewport */
   }
   
   .error__icon {
-    width: 20px;
-    height: 20px;
-    transform: translateY(-2px);
-    margin-right: 8px;
+    width: 5vh;
+    height: 5vh;
+    transform: translateY(-0.5vh);
+    margin-right: 2vh;
   }
   
   .error__icon path {
@@ -203,7 +204,7 @@
   
   .error__title {
     font-weight: 500;
-    font-size: 14px;
+    font-size: 3.5vh;
     color: #fff;
   }
   

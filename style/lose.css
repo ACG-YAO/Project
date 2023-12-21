@@ -10,7 +10,7 @@
     transition: background-color 3s; 
 }
 @keyframes shrinkAndShake {
-    0%, 100% {
+    0%, 150% {
         transform: translate(-50%, -50%) scale(1);
     }
     10%, 30%, 50%, 70%, 90% {
@@ -26,6 +26,26 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(1.5);
-    animation: shrinkAndShake 5s ease-in-out;
+    transform: translate(-50%, -50%) scale(0.9);
+    animation: shrinkAndShake 3s ease-in-out;
+}
+
+@keyframes flyDown {
+    from {
+        transform: translateY(200%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#myImage {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -20%) scale(0.6);
+    display: block;
+    
 }
