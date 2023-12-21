@@ -4,6 +4,7 @@ import { RandomGeneratedMap } from './Map';
 import { SwitchableCamera } from './Camera';
 import { TimeStamp, LoseIndicator, WinIndicator } from './utils';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { Sky } from 'three/examples/jsm/objects/Sky.js';
 
 export class Game {
     constructor() {
@@ -12,7 +13,6 @@ export class Game {
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
-        this.renderer.setClearColor(0x00BFFF);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.listener = new THREE.AudioListener();
@@ -72,6 +72,29 @@ export class Game {
         this.map.setReversedFence(ReversedFence);
         this.map.setReward(Pumpkin);
         this.map.initialize();
+
+        this.sky = new Sky();
+        this.sky.scale.setScalar(450000);
+        this.map.scene.add(this.sky);
+        this.sunSphere = new THREE.Mesh(
+            new THREE.SphereGeometry(15000, 16, 8),
+            new THREE.MeshBasicMaterial({ color: 0xffaa00 })
+        );
+        this.sunSphere.position.y = - 700000;
+        this.sunSphere.visible = false;
+        this.map.scene.add(this.sunSphere);
+        var uniforms = this.sky.material.uniforms;
+        uniforms['turbidity'].value = 6;
+        uniforms['rayleigh'].value = 2;
+        uniforms['mieCoefficient'].value = 0.003;
+        uniforms['mieDirectionalG'].value = 0.5;
+        var theta = Math.PI * (0.48 - 0.5);
+        var phi = 2 * Math.PI * (0.25 - 0.5);
+        this.sunSphere.position.x = 400000 * Math.cos(phi);
+        this.sunSphere.position.y = 400000 * Math.sin(phi) * Math.sin(theta);
+        this.sunSphere.position.z = 400000 * Math.sin(phi) * Math.cos(theta);
+        this.sunSphere.visible = true;
+        uniforms['sunPosition'].value.copy(this.sunSphere.position);
 
         this.cameraOffset = new THREE.Vector3(0, 2, 5);
         this.cameraPosition = new THREE.Vector3(0, 0, 20);
@@ -147,6 +170,13 @@ export class Game {
         if (this.map && this.map.scene) {
             this.disposeScene(this.map.scene);
         }
+        this.sky.material.dispose();
+        this.sky.geometry.dispose();
+        this.map.scene.remove(this.sky);
+        this.sky = null;
+        this.disposeObject(this.sunSphere);
+        this.map.scene.remove(this.sunSphere);
+        this.sunSphere = null;
         this.ghost = null;
         this.map.scene.remove(this.controls.getObject());
         this.controls = null;
@@ -196,7 +226,7 @@ export class Game {
                 fixedObjects[i].animate();
             }
             for (let i = 0; i < this.map.waterObjectsList.length; i++) {
-                this.map.waterObjectsList[i].material.uniforms['time'].value += 1 / 60;
+                this.map.waterObjectsList[i].material.uniforms['time'].value += 1 / 120;
             }
             this.renderer.render(this.map.scene, this.camera.getCamera());
         }

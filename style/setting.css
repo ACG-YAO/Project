@@ -21,10 +21,10 @@
     }
   
   .card__tags {
-    overflow: auto;
+    /*overflow: auto;*/
     height: 80%;
   }
-  .settingtitle {
+.settingtitle {
     font-weight: 900;
     font-size: 6vh;
   }
