@@ -1,17 +1,37 @@
 .settingcard {
-    width: 60%;
-    height: 80%;
+    width: 80%;
+    height: 90%;
     margin: 30px;
     background: #ecf39e;
-    padding: 10px;
+    padding: 50px 10px 0px 10px;
     display: flex;
     flex-wrap: wrap;
     color: #31572c;
     border-radius: 15px;
     box-shadow: -20px 20px 0px -5px #31572c;
     flex-direction: column;
-  }
-  
+}
+
+.settingcard.small {
+    width: 20%;
+    height: 34%;
+}
+
+.settingcard.medium {
+    width: 40%;
+    height: 80%;
+}
+
+.settingcard.large {
+    width: 80%;
+    height: 80%;
+}
+
+.settingcard.start {
+    width: 20%;
+    height: 34%;
+}
+
   .setting-container {
       display: flex;
       flex-direction: row; /* This stacks the buttons vertically */
@@ -20,13 +40,14 @@
     }
   
   .card__tags {
-    overflow: auto;
+    /*overflow: auto;*/
     height: 80%;
   }
-  .settingtitle {
+.settingtitle {
     font-weight: 900;
     font-size: 1.7em;
-  }
+    text-align: center;
+}
   
   .tag-container {
     display: flex;
