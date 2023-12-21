@@ -10,7 +10,7 @@
     transition: background-color 3s; 
 }
 @keyframes shrinkAndShake {
-    0%, 150% {
+    0%, 100% {
         transform: translate(-50%, -50%) scale(1);
     }
     10%, 30%, 50%, 70%, 90% {
@@ -24,15 +24,15 @@
 .game-over-image {
     display: none;
     position: absolute;
-    top: 50%;
+    top: 0%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -26%) scale(0.9);
     animation: shrinkAndShake 3s ease-in-out;
 }
 
 @keyframes flyDown {
     from {
-        transform: translateY(200%);
+        transform: translateY(100%);
         opacity: 0;
     }
     to {

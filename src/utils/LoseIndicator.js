@@ -10,15 +10,15 @@ export class LoseIndicator {
     display() {
         this.overlay.style.display = 'block';
         this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        setTimeout(function() {
-            document.getElementById("restartButton2").style.display = 'flex';
-        }, 4000); 
         setTimeout(() => {
             this.gameOverImage.style.display = 'block'; 
         }, 100); 
         setTimeout(function() {
+            document.getElementById("restartButton2").style.display = 'flex';
+        }, 6000); 
+        setTimeout(function() {
             document.getElementById("myImage").style.display = 'block';
-        }, 2000); 
+        }, 4000); 
         if (this.audio === 'on'){
             this.background.pause();
             this.music.play();
