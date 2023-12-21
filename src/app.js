@@ -18,7 +18,7 @@ window.addEventListener("load", function() {
         setTimeout(function() {
             document.getElementById("loadingScreen").style.display = 'none';
             game.start();
-        }, 200); 
+        }, 2000); 
     });
     document.getElementById("ruleButton").addEventListener("click", function() {
         document.getElementById("startScreen").style.display = 'none';
