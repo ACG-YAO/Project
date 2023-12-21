@@ -34,12 +34,7 @@ window.addEventListener("load", function() {
     });
     document.getElementById('restartButton').addEventListener('click', () => {
         document.getElementById('settingScreen').style.display = 'none';
-        document.getElementById("loadingScreen").style.display = 'flex';
-        game.initialize();
-        setTimeout(function () {
-            document.getElementById("loadingScreen").style.display = 'none';
-            game.start();
-        }, 2000);
+        document.getElementById("startScreen").style.display = 'flex';
     });
     let enter_setting = 0;
     document.getElementById('settingButton1').addEventListener('click', () => {
@@ -145,12 +140,47 @@ window.addEventListener("load", function() {
         }
     }
 
-    // Attach the event to each custom checkbox button
+    function deactivateAllButtons() {
+        if (activeButton) {
+            activeButton.classList.remove('active');
+            document.removeEventListener('keydown', changeButtonText);
+            activeButton = null;
+        }
+    }
+    
+    function isClickInsideElement(event, className) {
+        let target = event.target;
+        while (target != null) {
+            if (target.classList.contains(className)) {
+                return true;
+            }
+            target = target.parentElement;
+        }
+        return false;
+    }
+    
+    function deactivateAllButtons() {
+        document.querySelectorAll('.customCheckBox').forEach(button => {
+            button.classList.remove('active');
+        });
+        // Assuming activeButton is a global or accessible variable
+        activeButton = null;
+    }
+    
+    document.addEventListener('click', function(event) {
+        console.log(isClickInsideElement(event, 'customCheckBox'));
+        if (!isClickInsideElement(event, 'customCheckBox')) {
+            //deactivateAllButtons();
+        }
+    });
+    
+    // Assuming toggleActiveState is already defined and works as expected
     document.querySelectorAll('.customCheckBox').forEach(button => {
         button.addEventListener('click', function() {
             toggleActiveState(this);
         });
     });
+
     function checkForDuplicateValues(mapping) {
         let valueCounts = {};
         let duplicates = [];
@@ -170,11 +200,7 @@ window.addEventListener("load", function() {
 
     document.getElementById("backButton3").addEventListener("click", function() {
         let check = checkForDuplicateValues(buttonKeyMapping);
-        if (activeButton) {
-            activeButton.classList.remove('active');
-            document.removeEventListener('keydown', changeButtonText);
-            activeButton = null;
-        }
+        deactivateAllButtons();
         if (check === true) {
             game.control = buttonKeyMapping;
             game.audio = audio_control;

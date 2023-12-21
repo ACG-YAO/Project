@@ -1,6 +1,6 @@
 .settingcard {
-    width: 50%;
-    height: 300px;
+    width: 60%;
+    height: 80%;
     margin: 30px;
     background: #ecf39e;
     padding: 10px;
@@ -47,6 +47,12 @@
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    min-width: 100px; /* Adjust as needed */
+    height: 30%; /* Adjust as needed */
+
+    /* Center the text */
+    text-align: center;
+    line-height: 30px; 
   }
   
   .tag__name::before,
