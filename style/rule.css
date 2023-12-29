@@ -1,10 +1,22 @@
 .cardrule {
-   
+  width: 60%; /* You may want to keep this as a percentage */
+  height: 80vh; /* This will make the height responsive to the screen size */
+  margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
+  background: #f5e583;
+  padding: 1vw; /* Padding responsive to the width of the screen */
+  display: flex;
+  flex-wrap: wrap;
+  color: #b99803;
+  border-radius: 1vw; /* Make border-radius responsive */
+  box-shadow: -1vw 1vw 0vh -0.25vw #b99803;
+  flex-direction: column;
+  /* align-items: center; Center children */
+  overflow: auto;
   }
 
 .cardrule h2 {
     z-index: 1;
-    color: #31572c;
+    color: #472e03;
     font-size: 1.5em;
     padding-left: 20px;
     padding-right: 20px;

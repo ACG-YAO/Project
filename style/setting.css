@@ -2,13 +2,15 @@
   width: 60%; /* You may want to keep this as a percentage */
   height: 80vh; /* This will make the height responsive to the screen size */
   margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
-  background: #ecf39e;
+  /* background: #ecf39e; */
+  background: #f5e583;
   padding: 1vw; /* Padding responsive to the width of the screen */
   display: flex;
   flex-wrap: wrap;
-  color: #31572c;
+  /* color: #31572c; */
   border-radius: 1vw; /* Make border-radius responsive */
-  box-shadow: -1vw 1vw 0vh -0.25vw #31572c;
+  /* box-shadow: -1vw 1vw 0vh -0.25vw #31572c; */
+  box-shadow: -1vw 1vw 0vh -0.25vw #b99803;
   flex-direction: column;
   /* align-items: center; Center children */
 }
@@ -21,7 +23,7 @@
     }
   
   .card__tags {
-    /*overflow: auto;*/
+    overflow: auto;
     height: 80%;
   }
 .settingtitle {
@@ -40,7 +42,8 @@
     display: inline-block;
     color: #fff;
     font-size: 3.5vh;
-    background-color: #31572c;
+    /* background-color: #31572c; */
+    background-color:  #b99803;
     padding: 1vh 5vh 2vh;
     border-radius: 50vh;
     margin: 2vh 3vh 2vh 0;
@@ -65,7 +68,8 @@
     width: 1.5vh;
     height: 1.5vh;
     border-radius: 50%;
-    background: #90a955;
+    /* background: #90a955; */
+    background: #f4e39c;
   }
   
   .tag__name::before {
@@ -111,7 +115,8 @@
     }
     
     .customCheckBox:hover {
-      background-color: #9bbb64;
+      /* background-color: #9bbb64; */
+      background-color:  #c6af49;
       color: white;
       box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
     }
@@ -147,7 +152,8 @@
       display: none;
     }
     .customCheckBox.active {
-      background-color: #2d6737;
+      /* background-color: #2d6737; */
+      background-color:  #b99803;
       color: white;
       box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
   }
@@ -159,7 +165,8 @@
   
   /* Style for when an active .customCheckBox is hovered */
   .customCheckBox.active:hover {
-      background-color: #34723f;
+      /* background-color: #34723f; */
+      background-color:  #b99803;
       box-shadow: rgba(0, 0, 0, 0.26) 0vh -1vh 0.25vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.15) 0vh 0.75vh 1.5vh 0.5vh;
   }
   
