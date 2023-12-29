@@ -5,7 +5,7 @@
   height: 75vh; /* This will make the height responsive to the screen size */
   margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
   /* background: #ecf39e; */
-  background: #f5e583;
+  background-color: #f5e583;
   padding: 1vw; /* Padding responsive to the width of the screen */
   display: flex;
   flex-wrap: wrap;

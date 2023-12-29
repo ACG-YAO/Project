@@ -63,7 +63,6 @@ export class TimeStamp {
     updateDisplay() {
         const seconds = Math.floor((this.totaltime - this.currentTime) / 1000);
         let time_bar = document.getElementById('time');
-        console.log(time_bar);
         time_bar.style.setProperty('--p', Math.round(100.0 * seconds / (this.totaltime / 1000)));
         time_bar.style.setProperty('--c', `'${seconds}'`);
     }

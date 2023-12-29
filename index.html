@@ -19,6 +19,9 @@
         body {
             margin: 0;
             font-family: 'Orbitron', monospace;
+            background-image: url('./Textures/Halloween.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
 		#restartButton3 {
@@ -31,14 +34,17 @@
 			margin-top: 70vh;
 		}
 
+        .hidden {
+            display: none;
+        }
+
 		.overlay {
-			display: none;
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0, 0, 0, 0.5);
+			background-color: transparent;
 			z-index: 1000;
 			justify-content: center;
 			align-items: center;
@@ -96,7 +102,7 @@
 		</div>
 	</div>
 
-	<div id="loadingScreen" class="load-container">
+	<div id="loadingScreen" class="load-container hidden">
 		<div class="loading">
 			<svg width="128px" height="96px">
 				<polyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="back"></polyline>
@@ -105,7 +111,7 @@
 		</div>
 	</div>
 
-	<div id="menuScreen" class="load-container">
+	<div id="menuScreen" class="card-container hidden">
 		<div id="repeaterror" class="error">
 			<div class="error__icon">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path></svg>
@@ -238,7 +244,7 @@
 
 	</div>
 
-	<div id="ruleScreen" class="card-container">
+	<div id="ruleScreen" class="card-container hidden">
 		<div class="cardrule">
 			
 			<h2>
@@ -302,7 +308,7 @@
 		</div>
 	</div>
 
-	<div id="settingScreen" class="overlay">
+	<div id="settingScreen" class="overlay hidden">
 		<button id="resumeButton">
 			<svg height="48px" width="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
 				<rect fill="#fdd835" y="0" x="0" height="48" width="48"></rect>
@@ -352,7 +358,7 @@
 		</button>
 	</div>
 
-	<div id="startScreen" class="card-container">
+	<div id="startScreen" class="card-container hidden">
 
 		<button id="startButton">
 			<svg height="48px" width="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -403,10 +409,10 @@
 		</button>
 	</div>
 	<script type="module" src="/src/app.js"></script>
-	<div class="range_game" id='game' style="--p: 0; --c: '0/18'">
+	<div class="range_game hidden" id='game' style="--p: 0; --c: '0/18'">
 		<div class="range_game__label">Score</div>
 	</div>
-	<div class="range_time" id='time' style="--p: 100; --c: '600' ">
+	<div class="range_time hidden" id='time' style="--p: 100; --c: '600' ">
 		<div class="range_time__label">Time</div>
 	</div>
 </body>

@@ -7,6 +7,7 @@ window.addEventListener("load", function() {
     document.getElementById("ruleScreen").style.display = 'none';
     document.getElementById("settingScreen").style.display = 'none';
     document.getElementById("menuScreen").style.display = 'none';
+    
     document.getElementById("enterButton").addEventListener("click", function() {
         document.getElementById("titleScreen").style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
@@ -14,6 +15,8 @@ window.addEventListener("load", function() {
     document.getElementById("startButton").addEventListener("click", function() {
         document.getElementById("startScreen").style.display = 'none';
         document.getElementById("loadingScreen").style.display = 'flex';
+        document.getElementById('game').style.display = 'flex';
+        document.getElementById('time').style.display = 'flex';
         game.initialize();
         setTimeout(function() {
             document.getElementById("loadingScreen").style.display = 'none';
@@ -34,14 +37,23 @@ window.addEventListener("load", function() {
     });
     document.getElementById('restartButton1').addEventListener('click', () => {
         document.getElementById('settingScreen').style.display = 'none';
+        game.stop();
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('time').style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
     });
     document.getElementById('restartButton2').addEventListener('click', () => {
         document.getElementById('lose-indicator').style.display = 'none';
+        game.stop();
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('time').style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
     });
     document.getElementById('restartButton3').addEventListener('click', () => {
         document.getElementById('win-indicator').style.display = 'none';
+        game.stop();
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('time').style.display = 'none';
         document.getElementById("startScreen").style.display = 'flex';
     });
     let enter_setting = 0;

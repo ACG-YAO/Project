@@ -65,6 +65,7 @@ export class Game {
         if (this.playing)
             this.stop();
         this.score = 0;
+        this.renderer.domElement.style.display = 'block';
         let game_bar = document.getElementById('game');
         game_bar.style.setProperty('--p', Math.round(100 * this.score / this.numRewards));
         game_bar.style.setProperty('--user-content', `'${this.score.toString()}/${this.numRewards.toString()}'`);
@@ -169,6 +170,8 @@ export class Game {
 
     stop() {
         this.playing = false;
+        this.renderer.clear();
+        this.renderer.domElement.style.display = 'none';
         if (this.map && this.map.scene) {
             this.disposeScene(this.map.scene);
         }
@@ -234,7 +237,7 @@ export class Game {
             }
             this.renderer.render(this.map.scene, this.camera.getCamera());
         }
-        requestAnimationFrame(this.animate);
+        this.requestID = requestAnimationFrame(this.animate);
     }
 
     start() {
