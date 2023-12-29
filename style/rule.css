@@ -1,6 +1,6 @@
 .cardrule {
-  width: 60%; /* You may want to keep this as a percentage */
-  height: 80vh; /* This will make the height responsive to the screen size */
+  width: 80%; /* You may want to keep this as a percentage */
+  height: 94vh; /* This will make the height responsive to the screen size */
   margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
   background: #f5e583;
   padding: 1vw; /* Padding responsive to the width of the screen */

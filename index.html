@@ -12,53 +12,38 @@
 	<link rel="stylesheet" href="style\rule.css">
 	<link rel="stylesheet" href="style\title.css">
 	<link rel="stylesheet" href="style\setting.css">
+	<link rel="stylesheet" href="style\progressbar.scss">
 	<style>
-		body {
-			margin: 0;
-			font-family: Arial, sans-serif; 
-		}
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
-		#game, #time {
-			position: absolute;
-			top: 10px;
-			background-color: rgba(0, 0, 0, 0.5);
-			color: white;
-			padding: 10px;
-			border-radius: 5px;
-			font-size: 24px;
-		}
-
-		#game {
-			left: 10px;
-		}
-
-		#time {
-			right: 10px;
-		}
+        body {
+            margin: 0;
+            font-family: 'Orbitron', monospace;
+        }
 
 		#restartButton3 {
 			display: none;
-			margin-top: 70vh; 
+			margin-top: 70vh;
 		}
 
 		#restartButton2 {
 			display: none;
-			margin-top: 70vh; 
+			margin-top: 70vh;
 		}
 
-        .overlay {
-            display: none; 
-            position: fixed; 
-            top: 0;
-            left: 0;
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000; 
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+		.overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
 
 	</style>
 </head>
@@ -71,7 +56,6 @@
 	<div id="lose-indicator" class="overlay">
 		<img src="style\lose_image1.png" alt="Game Over" class="game-over-image" />
 		<img id="myImage" src="style\text_lose.jpg" style="display: none;" />
-		<!-- <img src="style\text_lose.jpg" alt="Game Over" class="game-over-image" /> -->
 		<div class="button-container">
 			<button id="restartButton2">
 				<svg height="48px" width="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -138,92 +122,98 @@
 			<span class="settingtitle">Setting</span>
 			<div class="card__tags">
 				<div class="tag-container">
-					<div class="setting-container">
-						<li class="tag__name">Forward</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="forward" class="customCheckBox">
-									<div class="inner">W</div>
+					<div class="tag-super-container">
+						<div class="tag-container">
+							<div class="setting-container">
+								<li class="tag__name">Forward</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="forward" class="customCheckBox">
+											<div class="inner">W</div>
+										</div>
+									</label>
 								</div>
-							</label>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Backward</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="backward" class="customCheckBox">
+											<div class="inner">S</div>
+										</div>
+									</label>
+								</div>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Left</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="left" class="customCheckBox">
+											<div class="inner">A</div>
+										</div>
+									</label>
+								</div>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Right</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="right" class="customCheckBox">
+											<div class="inner">D</div>
+										</div>
+									</label>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Backward</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="backward" class="customCheckBox">
-									<div class="inner">S</div>
+						<div class="tag-container">
+							<div class="setting-container">
+								<li class="tag__name">Show Map</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="map" class="customCheckBox">
+											<div class="inner">M</div>
+										</div>
+									</label>
 								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Left</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="left" class="customCheckBox">
-									<div class="inner">A</div>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Pause</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="pause" class="customCheckBox">
+											<div class="inner">L</div>
+										</div>
+									</label>
 								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Right</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="right" class="customCheckBox">
-									<div class="inner">D</div>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Change View</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="changeview" class="customCheckBox">
+											<div class="inner">R</div>
+										</div>
+									</label>
 								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Show Map</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="map" class="customCheckBox">
-									<div class="inner">M</div>
+							</div>
+							<div class="setting-container">
+								<li class="tag__name">Audio</li>
+								<div class="customCheckBoxHolder">
+									<input type="checkbox" id="cCB1" class="customCheckBoxInput">
+									<label for="cCB1" class="customCheckBoxWrapper">
+										<div id="audio" class="customCheckBox">
+											<div class="inner">On</div>
+										</div>
+									</label>
 								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Pause</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="pause" class="customCheckBox">
-									<div class="inner">L</div>
-								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Change View</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="changeview" class="customCheckBox">
-									<div class="inner">R</div>
-								</div>
-							</label>
-						</div>
-					</div>
-					<div class="setting-container">
-						<li class="tag__name">Audio</li>
-						<div class="customCheckBoxHolder">
-							<input type="checkbox" id="cCB1" class="customCheckBoxInput">
-							<label for="cCB1" class="customCheckBoxWrapper">
-								<div id="audio" class="customCheckBox">
-									<div class="inner">On</div>
-								</div>
-							</label>
+							</div>
 						</div>
 					</div>
 					<button id="backButton3">
@@ -238,19 +228,22 @@
 							<path d="M17.615,29.677c-0.502,0-0.873-0.03-1.052-0.069c-0.086-0.019-0.236-0.035-0.434-0.06 c-5.344-0.679-8.053-2.784-8.052-6.255c0.001-2.698,1.17-7.238,8.986-7.32l0.181-0.002c3.444-0.038,6.414-0.068,8.272,1.818 c1.173,1.191,1.712,3,1.647,5.53c-0.044,1.688-0.785,3.147-2.144,4.217C22.785,29.296,19.388,29.677,17.615,29.677z M17.086,17.973 c-7.006,0.074-7.008,4.023-7.008,5.321c-0.001,3.109,3.598,3.926,6.305,4.27c0.273,0.035,0.48,0.063,0.601,0.089 c0.563,0.101,4.68,0.035,6.855-1.732c0.865-0.702,1.299-1.57,1.326-2.653c0.051-1.958-0.301-3.291-1.073-4.075 c-1.262-1.281-3.834-1.255-6.825-1.222L17.086,17.973z" fill="#212121"></path>
 							<path d="M15.078,19.043c1.957-0.326,5.122-0.529,4.435,1.304c-0.489,1.304-7.185,2.185-7.185,0.652 C12.328,19.467,15.078,19.043,15.078,19.043z" fill="#e1f5fe"></path>
 						</svg>
-						<span class="now">now!</span>
+						<span class="now">back</span>
 						<span class="play">back</span>
 					</button>
 				</div>
 			</div>
-		  </div>
+			</div>
 
 
 	</div>
 
 	<div id="ruleScreen" class="card-container">
 		<div class="cardrule">
+			
 			<h2>
+				<span class="settingtitle">Rule</span>
+				<br><br>
 				1. To return to the realm of the living, you need to find and collect 18 hidden pumpkin lanterns from various locations.
 				<br><br>
 				2. Time is crucial. If you don't complete your task before dawn, the spirits will disappear, and you'll miss your opportunity to go back to the mortal world.
@@ -263,7 +256,7 @@
 				<br><br>
 				6. Press the L key to pause the game, where you can choose to resume, restart, or access the settings.
 				<br><br>
-				7. The mouse cursor will be concealed during gameplay; press the Escape (Esc) key to bring it back.
+				7. Customize your control keys in the settings as per your preference.
 				<div class="button-container">
 					<button id="backButton1">
 						<svg height="48px" width="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -410,7 +403,11 @@
 		</button>
 	</div>
 	<script type="module" src="/src/app.js"></script>
-	<p id='game'><span id='text'>Score</span> <span id='score'>0</span></p>
-	<p id='time'><span id='time-text'>Time</span> <span id='game-time'>600</span></p>
+	<div class="range_game" id='game' style="--p: 0; --c: '0/18'">
+		<div class="range_game__label">Score</div>
+	</div>
+	<div class="range_time" id='time' style="--p: 100; --c: '600' ">
+		<div class="range_time__label">Time</div>
+	</div>
 </body>
 </html>

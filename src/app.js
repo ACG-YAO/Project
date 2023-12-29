@@ -146,8 +146,9 @@ window.addEventListener("load", function() {
             document.getElementById("invaliderror").style.display = 'flex';
             setTimeout(function() {
                 document.getElementById("invaliderror").style.display = 'none';
-            }, 2000); // Time in milliseconds
+            }, 2000); 
         }
+        deactivateAllButtons();
     }
 
     function deactivateAllButtons() {
@@ -158,33 +159,6 @@ window.addEventListener("load", function() {
         }
     }
     
-    function isClickInsideElement(event, className) {
-        let target = event.target;
-        while (target != null) {
-            if (target.classList.contains(className)) {
-                return true;
-            }
-            target = target.parentElement;
-        }
-        return false;
-    }
-    
-    function deactivateAllButtons() {
-        document.querySelectorAll('.customCheckBox').forEach(button => {
-            button.classList.remove('active');
-        });
-        // Assuming activeButton is a global or accessible variable
-        activeButton = null;
-    }
-    
-    document.addEventListener('click', function(event) {
-        console.log(isClickInsideElement(event, 'customCheckBox'));
-        if (!isClickInsideElement(event, 'customCheckBox')) {
-            //deactivateAllButtons();
-        }
-    });
-    
-    // Assuming toggleActiveState is already defined and works as expected
     document.querySelectorAll('.customCheckBox').forEach(button => {
         button.addEventListener('click', function() {
             toggleActiveState(this);

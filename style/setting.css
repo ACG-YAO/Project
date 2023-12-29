@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
 .settingcard {
-  width: 60%; /* You may want to keep this as a percentage */
-  height: 80vh; /* This will make the height responsive to the screen size */
+  width: 150vh; /* You may want to keep this as a percentage */
+  height: 75vh; /* This will make the height responsive to the screen size */
   margin: 1vh auto; /* Responsive vertical margin, auto for horizontal centering */
   /* background: #ecf39e; */
   background: #f5e583;
@@ -29,35 +31,46 @@
 .settingtitle {
     font-weight: 900;
     font-size: 6vh;
-  }
-  
-  .tag-container {
+    color: #b99803;
+    font-family: 'Orbitron', monospace;
+}
+
+
+.tag-super-container {
+    margin: 1vh 3vh 1vh 3vh;
     display: flex;
-    flex-direction: column; /* This stacks the buttons vertically */
-    align-items: center; /* This centers the buttons horizontally */
+    flex-direction: row; 
+    align-items: center; 
     justify-content: flex-start;
-  }
-  
-  .tag__name {
+}
+
+.tag-container {
+    margin: 1vh 3vh 1vh 3vh;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start;
+}
+
+.tag__name {
     display: inline-block;
-    color: #fff;
+    color: #472e03;
     font-size: 3.5vh;
-    /* background-color: #31572c; */
-    background-color:  #b99803;
-    padding: 1vh 5vh 2vh;
+    font-weight: bold;
+    font-family: 'Orbitron', monospace;
+    background-color: #FDD835;
+    padding: 3vh 5vh 3vh;
     border-radius: 50vh;
     margin: 2vh 3vh 2vh 0;
     margin-left: 0vh;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    min-width: 20vh; /* Adjust as needed */
-    height: 4vh; /* Adjust as needed */
-
-    /* Center the text */
+    width: 40vh;
+    height: 4vh;
     text-align: center;
-    line-height: 5vh; 
-  }
+    line-height: 0vh;
+}
   
   .tag__name::before,
   .tag__name::after {
@@ -68,7 +81,6 @@
     width: 1.5vh;
     height: 1.5vh;
     border-radius: 50%;
-    /* background: #90a955; */
     background: #f4e39c;
   }
   
@@ -80,12 +92,6 @@
     right: 1.5vh;
   }
   
-  /* .tag__name:hover {
-    transform: scale(1.1);
-    background-color: #51572c;
-  } */
-  
-  
   
   .customCheckBoxHolder {
       margin: 1vh;
@@ -93,12 +99,12 @@
     }
     
     .customCheckBox {
-      width: fit-content;
+      width: 10vh;
       position: relative;
       overflow: hidden;
       cursor: pointer;
       user-select: none;
-      padding: 1vh 6vh;
+      padding: 3vh 5vh;
       background-color: rgba(0, 0, 0, 0.16);
       border-radius: 0vh;
       color: rgba(255, 255, 255, 0.7);
@@ -113,13 +119,12 @@
       justify-content: center;
       min-width: 13vh;
     }
-    
-    .customCheckBox:hover {
-      /* background-color: #9bbb64; */
-      background-color:  #c6af49;
-      color: white;
-      box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
-    }
+
+        .customCheckBox:hover {
+            background-color: #FDD835;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.23) 0vh -1vh 0.251vh 0vh inset, rgba(255, 255, 255, 0.17) 0vh -0.251vh 0.251vh 0vh, rgba(0, 0, 0, 0.17) 0vh 0.5vh 1vh 0.25vh;
+        }
     
     .customCheckBox .inner {
       font-size: 4vh;

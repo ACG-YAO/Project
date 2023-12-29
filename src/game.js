@@ -65,7 +65,9 @@ export class Game {
         if (this.playing)
             this.stop();
         this.score = 0;
-        document.getElementById('score').textContent = this.score;
+        let game_bar = document.getElementById('game');
+        game_bar.style.setProperty('--p', Math.round(100 * this.score / this.numRewards));
+        game_bar.style.setProperty('--user-content', `'${this.score.toString()}/${this.numRewards.toString()}'`);
         this.map = new RandomGeneratedMap(this.mazeSize, this.numRewards, this.exclusionZoneSize, this.scaleSize);
         this.map.setProtagonist(Ghost);
         this.map.setFence(Fence);
@@ -201,7 +203,9 @@ export class Game {
             }
             if (this.ghost.animate(this.map.scene, fixedObjects)) {
                 this.score++;
-                document.getElementById('score').textContent = this.score;
+                let game_bar = document.getElementById('game');
+                game_bar.style.setProperty('--p', Math.round(100 * this.score / this.numRewards));
+                game_bar.style.setProperty('--c', `'${this.score.toString()}/${this.numRewards.toString()}'`);
                 if (this.audio === 'on'){
                     this.goalMusic.play();
                 }

@@ -61,21 +61,11 @@ export class TimeStamp {
     }
 
     updateDisplay() {
-        const timeElement = document.getElementById('game-time');
-        const timeContainer = document.getElementById('time');
         const seconds = Math.floor((this.totaltime - this.currentTime) / 1000);
-
-        if (timeElement) {
-            timeElement.textContent = seconds >= 0 ? seconds : 0;
-            
-            if (seconds <= 10 && seconds >= 0) { 
-                timeContainer.classList.add('blink');
-                timeContainer.style.color = 'red';
-            } else {
-                timeContainer.classList.remove('blink');
-                timeContainer.style.color = 'white'; 
-            }
-        }
+        let time_bar = document.getElementById('time');
+        console.log(time_bar);
+        time_bar.style.setProperty('--p', Math.round(100.0 * seconds / (this.totaltime / 1000)));
+        time_bar.style.setProperty('--c', `'${seconds}'`);
     }
 }
 
