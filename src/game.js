@@ -48,7 +48,7 @@ export class Game {
         this.scaleSize = 4;
         this.totaltime = 600000;
         this.animate = this.animate.bind(this);
-        this.finalScore = 19;
+        this.finalScore = 18;
         this.control = {
             'forward': 'KeyW',
             'backward': 'KeyS',
