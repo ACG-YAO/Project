@@ -120,7 +120,7 @@ export class Game {
         let position = this.sunSphere.position.clone().normalize();
         this.dirLight.position.set(position.x, position.y, position.z);
         this.map.scene.add(this.dirLight);
-        this.camera.setComposer(this.renderer, this.map.scene,0.3);
+        this.camera.setComposer(this.renderer, this.map.scene, 0.1);
         this.playing = true;
         this.resetController();
     }

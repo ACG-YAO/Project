@@ -31,9 +31,9 @@ export class SwitchableCamera extends Group {
     }
 
     setComposer(renderer, scene, mixRatio) {
-        this.firstPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.firstPersonPerspectiveCamera.camera, mixRatio);
-        this.thirdPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.thirdPersonPerspectiveCamera.camera, mixRatio);
-        this.topDownComposer = new RenderComposer(renderer, scene, this.topDownCamera.camera, mixRatio);
+        this.firstPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.firstPersonPerspectiveCamera.camera, mixRatio, 5.0, 0.025, 0.001);
+        this.thirdPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.thirdPersonPerspectiveCamera.camera, mixRatio, 0, 0, 0);
+        this.topDownComposer = new RenderComposer(renderer, scene, this.topDownCamera.camera, mixRatio, 0, 0, 0);
     }
 
     getComposer() {

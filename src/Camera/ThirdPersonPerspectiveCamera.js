@@ -14,9 +14,9 @@ export class ThirdPersonPerspectiveCamera extends Group {
     }
 
     animate(position, rotation) {
-        if (!this.isDragging && Math.abs(this.angle) > 0.006) {
-            if (this.angle > 0) this.angle -= 0.005;
-            else this.angle += 0.005;
+        if (!this.isDragging && Math.abs(this.angle) > 0.011) {
+            if (this.angle > 0) this.angle -= 0.01;
+            else this.angle += 0.01;
         }
 
         const relativeOffsetX = this.offset.z * Math.sin(rotation.y + this.angle) + this.offset.x * Math.cos(rotation.y + this.angle);

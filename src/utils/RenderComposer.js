@@ -6,10 +6,10 @@ import { SavePass } from 'three/examples/jsm/postprocessing/SavePass.js';
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js';
 import { BlendShader } from 'three/examples/jsm/shaders/BlendShader.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 
 export class RenderComposer {
-
-    constructor(renderer, scene, camera, mixRatio) {
+    constructor(renderer, scene, camera, mixRatio, focus, aperture, maxblur) {
         this.composer = new EffectComposer(renderer);
         this.renderPass = new RenderPass(scene, camera);
 
@@ -24,11 +24,17 @@ export class RenderComposer {
         this.blendPass.uniforms["tDiffuse2"].value = this.savePass.renderTarget.texture;
         this.blendPass.uniforms["mixRatio"].value = mixRatio;
         this.smaaPass = new SMAAPass(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
+        this.bokehPass = new BokehPass(scene, camera, {
+            focus: focus,
+            aperture: aperture,
+            maxblur: maxblur
+        });
         this.outputPass = new ShaderPass(CopyShader);
         this.outputPass.renderToScreen = true;
 
         this.composer.addPass(this.renderPass);
         this.composer.addPass(this.blendPass);
+        this.composer.addPass(this.bokehPass);
         this.composer.addPass(this.savePass);
         this.composer.addPass(this.smaaPass);
         this.composer.addPass(this.outputPass);
@@ -37,7 +43,6 @@ export class RenderComposer {
     render() {
         this.composer.render();
     }
-
 }
 
 
