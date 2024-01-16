@@ -12,7 +12,8 @@ export class RandomGeneratedMap extends BaseMap {
             ROAD: 1,
             REWARD: 2,
             START: 3,
-            WATER: 4
+            WATER: 4,
+            USED: 5
         };
         this.waterObjectsList = [];
         this.agentLocation = null;
@@ -25,8 +26,24 @@ export class RandomGeneratedMap extends BaseMap {
         this.placeObjects(this.Reward, this.findReward());
         this.placeObjects(this.Fence, this.findYFence());
         this.placeObjects(this.ReversedFence, this.findXFence());
-        this.placeDogs(this.Dog, this.findDrinkingYDog());
-        this.placeDogs(this.ReversedDog, this.findDrinkingXDog());
+        this.placeOthers(this.Dog, this.findDrinkingYDog());
+        this.placeOthers(this.ReversedDog, this.findDrinkingXDog());
+        let zones = this.findDrinkingYDog();
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.2, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.3, 0.5));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.4, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.5, 0.4));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.6, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.8, 0.1));
+        zones = this.findDrinkingXDog();
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.2, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.3, 0.5));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.4, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.5, 0.4));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.6, 0.2));
+        this.placeOthers(this.Grass, this.offsetZones(zones, 0.8, 0.1));
+        this.placeOthers(this.Inn, this.findInn());
+        this.placeOthers(this.Tree, this.findTree());
         // this.placeDogs(this.Dog, this.findWalkingDog());
     }
 
@@ -139,6 +156,7 @@ export class RandomGeneratedMap extends BaseMap {
 
 
     placeObjects(name, list) {
+        
         list.forEach(center => {
             const object = new name(this.scene, (gltf) => {
                 gltf.scene.position.set(this.scaleSize * (center.x - this.halfSize), 0, this.scaleSize * (center.y - this.halfSize));
@@ -150,14 +168,14 @@ export class RandomGeneratedMap extends BaseMap {
         });
     }
 
-    placeDogs(name, list) {
+    placeOthers(name, list) {
         list.forEach(center => {
             const object = new name(this.scene, (gltf) => {
                 gltf.scene.position.set(this.scaleSize * (center.x - this.halfSize), 0, this.scaleSize * (center.y - this.halfSize));
                 this.scene.add(gltf.scene);
             });
             while (!object.getLoadPromise()) { }
-            this.dogsList.push(object);
+            this.otherObejectsList.push(object);
             this.allObjectsList.push(object);
         });
     }
@@ -170,6 +188,7 @@ export class RandomGeneratedMap extends BaseMap {
                     if (this.maze[y_][x] === this.MapTypes.LAND && this.maze[y_+1][x] === this.MapTypes.WATER) {
                         y = y_ + 0.33;
                     zones.push({ x, y });
+                    this.maze[y_][x] = this.MapTypes.USED;
                 }
             }
         }
@@ -184,10 +203,50 @@ export class RandomGeneratedMap extends BaseMap {
                     if (this.maze[y][x_] === this.MapTypes.LAND && this.maze[y][x_+1] === this.MapTypes.WATER) {
                         x = x_ + 0.33;
                     zones.push({ x, y });
+                    this.maze[y][x_] = this.MapTypes.USED;
                 }
             }
         }
         return zones;
+    }
+
+    findInn() {
+        const zones = [];
+        for (let y = 1; y < this.maze.length-1; y+=1) {
+            for (let x = 1; x < this.maze[y].length-1; x+=1) {
+                    if (this.maze[y][x] === this.MapTypes.LAND &&
+                        this.maze[y+1][x] === this.MapTypes.LAND &&
+                        this.maze[y][x+1] === this.MapTypes.LAND &&
+                        this.maze[y+1][x+1] === this.MapTypes.LAND &&
+                        Math.random() < 0.25
+                        ) {
+                    this.maze[y][x] = this.MapTypes.USED;
+                    this.maze[y+1][x] = this.MapTypes.USED;
+                    this.maze[y][x+1] = this.MapTypes.USED;
+                    this.maze[y+1][x+1] = this.MapTypes.USED;
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return this.offsetZones(zones, 0.45, 0.3);
+    }
+
+    findTree() {
+        const zones = [];
+        for (let y = 1; y < this.maze.length-1; y+=1) {
+            for (let x = 1; x < this.maze[y].length-1; x+=1) {
+                    if (this.maze[y][x] === this.MapTypes.LAND &&
+                        this.maze[y+1][x] === this.MapTypes.LAND &&
+                        this.maze[y][x+1] === this.MapTypes.LAND &&
+                        this.maze[y+1][x+1] === this.MapTypes.LAND &&
+                        Math.random() < 0.9
+                        ) {
+                    this.maze[y][x] = this.MapTypes.USED;
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return this.offsetZones(zones, 0.45, 0.3);
     }
 
     findWalkingDog() {
@@ -351,6 +410,12 @@ export class RandomGeneratedMap extends BaseMap {
     updateAgentLocation(newLocation) {
         this.agentLocation = newLocation;
         this.processDisplayOfObjects();
+    }
+
+    offsetZones(zones, a, b) {
+        return zones.map(zone => {
+            return { x: zone.x + a, y: zone.y + b };
+        });
     }
 }
 

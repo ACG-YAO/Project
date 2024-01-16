@@ -6,8 +6,10 @@ export class Inn extends Obstacles {
         super();
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
-            loader.load('Models/Inn.glb', (gltf) => {
-                this.initialize(gltf, scene, onLoadCallback, 2.0, 1.5, 2.0);
+            loader.load('Models/Inn1.glb', (gltf) => {
+                //this.initialize(gltf, scene, onLoadCallback, 1.4, 1.0, 1.4);
+                this.initialize(gltf, scene, onLoadCallback, 3.5, 3.5, 3);
+                gltf.scene.position.y += 1.9;
                 resolve(gltf);
             }, undefined, (error) => {
                 reject(error);

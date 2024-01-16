@@ -6,8 +6,9 @@ export class DeadTrees extends Obstacles {
         super();
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
-            loader.load('Models/DeadTrees.glb', (gltf) => {
-                this.initialize(gltf, scene, onLoadCallback, 30, 35, 30);
+            loader.load('Models/Trees.glb', (gltf) => {
+                //this.initialize(gltf, scene, onLoadCallback, 30, 35, 30);
+                this.initialize(gltf, scene, onLoadCallback, 3, 3.5, 4);
                 resolve(gltf);
             }, undefined, (error) => {
                 reject(error);
