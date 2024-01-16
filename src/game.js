@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Ghost, Pumpkin, Fence, ReversedFence, ShibaInu, ReversedShibaInu } from './Object';
+import { Ghost, Pumpkin, Fence, ReversedFence, ShibaInu, ReversedShibaInu, DeadTrees, Inn, Grass } from './Object';
 import { RandomGeneratedMap } from './Map';
 import { SwitchableCamera } from './Camera';
 import { TimeStamp, LoseIndicator, WinIndicator } from './utils';
@@ -76,6 +76,9 @@ export class Game {
         this.map.setReward(Pumpkin);
         this.map.setDog(ShibaInu);
         this.map.setReversedDog(ReversedShibaInu);
+        this.map.setTree(DeadTrees);
+        this.map.setInn(Inn);
+        this.map.setGrass(Grass);
         this.map.initialize();
 
         this.sky = new Sky();
@@ -210,7 +213,7 @@ export class Game {
             for (let i = 0; i < fixedObjects.length; i++) {
                 fixedObjects[i].updateBoundary();
             }
-            let dogs = this.map.getDogs();
+            let others = this.map.getOtherObejects();
             if (this.ghost.animate(this.map.scene, fixedObjects)) {
                 this.score++;
                 let game_bar = document.getElementById('game');
@@ -220,18 +223,23 @@ export class Game {
                     this.goalMusic.play();
                 }
                 if (this.score === this.finalScore) {
-                    this.locked = true;
-                    this.controls.unlock();
-                    this.winIndicator.display();
-                    if (this.audio === 'on'){
-                        this.backgroundMusic.pause();
-                        setTimeout(() => {
-                            this.winMusic.play();
-                        }, 1000);
-                        setTimeout(() => {
-                            this.backgroundMusic.play();
-                        }, 5000);
-                    }
+                    setTimeout(() => {
+                        this.ghost.switchAnimation(6);
+                    }, 1100);
+                    setTimeout(() => {
+                        this.locked = true;
+                        this.controls.unlock();
+                        this.winIndicator.display();
+                        if (this.audio === 'on'){
+                            this.backgroundMusic.pause();
+                            setTimeout(() => {
+                                this.winMusic.play();
+                            }, 1000);
+                            setTimeout(() => {
+                                this.backgroundMusic.play();
+                            }, 5000);
+                        }
+                    }, 3400);
                 }
             }
             this.map.updateAgentLocation(this.ghost.object3D.position);
@@ -239,8 +247,8 @@ export class Game {
             for (let i = 0; i < fixedObjects.length; i++) {
                 fixedObjects[i].animate();
             }
-            for (let i = 0; i < dogs.length; i++) {
-                dogs[i].animate();
+            for (let i = 0; i < others.length; i++) {
+                others[i].animate();
             }
             for (let i = 0; i < this.map.waterObjectsList.length; i++) {
                 this.map.waterObjectsList[i].material.uniforms['time'].value += 1 / 120;
