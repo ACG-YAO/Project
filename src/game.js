@@ -114,14 +114,12 @@ export class Game {
             this.map.scene.add(gltf.scene);
         });
         this.map.pushMovableObjects(this.ghost);
-        this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+        this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 4);
         this.map.scene.add(this.light);
         this.dirLight = new THREE.DirectionalLight(0xffffff, 1);
         let position = this.sunSphere.position.clone().normalize();
         this.dirLight.position.set(position.x, position.y, position.z);
         this.map.scene.add(this.dirLight);
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 2);
-        this.map.scene.add(this.ambientLight);
         this.camera.setComposer(this.renderer, this.map.scene,0.3);
         this.playing = true;
         this.resetController();
@@ -198,6 +196,8 @@ export class Game {
         this.light = null;
         this.map.scene.remove(this.dirLight);
         this.dirLight = null;
+        this.map.scene.remove(this.dogLight);
+        this.dogLight = null;
         this.timeStamp = null;
         this.loseIndicator = null;
         this.winIndicator = null;

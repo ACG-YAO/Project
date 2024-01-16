@@ -13,7 +13,6 @@ export class ReversedShibaInu extends Obstacles {
             loader.load('Models/ShibaInu.glb', (gltf) => {
                 this.initialize(gltf, scene, onLoadCallback, 0.38, 0.38, 0.38);
                 gltf.scene.rotation.y = Math.PI / 2; 
-                this.setupLayers(gltf);
                 this.mixer = new THREE.AnimationMixer(gltf.scene);
                 this.actions = [];
                 gltf.animations.forEach((clip, index) => {
@@ -44,26 +43,6 @@ export class ReversedShibaInu extends Obstacles {
             this.mixer.update(delta);
         }
         return true;
-    }
-
-    setupLayers(gltf) {
-        
-        const preserveLayers = new Set(['Dog']);
-        const preservedObjects = new Set();
-        
-        gltf.scene.traverse((child) => {
-            if (preserveLayers.has(child.name)) {
-                preservedObjects.add(child);
-                child.traverse((descendant) => {
-                    preservedObjects.add(descendant);
-                });
-            }
-        });
-        gltf.scene.traverse((child) => {
-            if (!preservedObjects.has(child)) {
-                child.layers.set(1);
-            }
-        });
     }
 }
 export default ReversedShibaInu;
