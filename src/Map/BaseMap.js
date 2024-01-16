@@ -13,11 +13,14 @@ export class BaseMap extends Group {
         this.scene = new THREE.Scene();
         this.fixedObjectsList = [];
         this.movableObjectsList = [];
+        this.dogsList = [];
         this.allObjectsList = [];
         this.Protagonist = null;
         this.Fence = null;
         this.ReversedFence = null;
         this.Reward = null;
+        this.Dog = null;
+        this.ReversedDog = null;
     }
 
     setProtagonist(type) {
@@ -36,6 +39,14 @@ export class BaseMap extends Group {
         this.Reward = type;
     }
 
+    setDog(type) {
+        this.Dog = type;
+    }
+
+    setReversedDog(type) {
+        this.ReversedDog = type;
+    }
+
     pushFixedObjects(object) {
         this.fixedObjectsList.push(object);
     }
@@ -44,12 +55,20 @@ export class BaseMap extends Group {
         this.movableObjectsList.push(object);
     }
 
+    pushDogs(object) {
+        this.dogsList.push(object);
+    }
+
     getFixedObjects() {
         return this.fixedObjectsList;
     }
 
     getMovableObjects() {
         return this.movableObjectsList;
+    }
+
+    getDogs() {
+        return this.dogsList;
     }
 }
 

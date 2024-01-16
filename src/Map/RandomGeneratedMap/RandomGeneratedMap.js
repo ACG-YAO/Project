@@ -25,6 +25,9 @@ export class RandomGeneratedMap extends BaseMap {
         this.placeObjects(this.Reward, this.findReward());
         this.placeObjects(this.Fence, this.findYFence());
         this.placeObjects(this.ReversedFence, this.findXFence());
+        this.placeDogs(this.Dog, this.findDrinkingYDog());
+        this.placeDogs(this.ReversedDog, this.findDrinkingXDog());
+        // this.placeDogs(this.Dog, this.findWalkingDog());
     }
 
     createRandomPath(start, end) {
@@ -145,6 +148,71 @@ export class RandomGeneratedMap extends BaseMap {
             this.fixedObjectsList.push(object);
             this.allObjectsList.push(object);
         });
+    }
+
+    placeDogs(name, list) {
+        list.forEach(center => {
+            const object = new name(this.scene, (gltf) => {
+                gltf.scene.position.set(this.scaleSize * (center.x - this.halfSize), 0, this.scaleSize * (center.y - this.halfSize));
+                this.scene.add(gltf.scene);
+            });
+            while (!object.getLoadPromise()) { }
+            this.dogsList.push(object);
+            this.allObjectsList.push(object);
+        });
+    }
+
+    findDrinkingYDog() {
+        const zones = [];
+        let y = 0;
+        for (let y_ = 1; y_ < this.maze.length-1; y_+=2) {
+            for (let x = 1; x < this.maze[y_].length-1; x+=2) {
+                    if (this.maze[y_][x] === this.MapTypes.LAND && this.maze[y_+1][x] === this.MapTypes.WATER) {
+                        y = y_ + 0.33;
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return zones;
+    }
+
+    findDrinkingXDog() {
+        const zones = [];
+        let x = 0;
+        for (let y = 1; y < this.maze.length-1; y+=2) {
+            for (let x_ = 1; x_ < this.maze[y].length-1; x_+=2) {
+                    if (this.maze[y][x_] === this.MapTypes.LAND && this.maze[y][x_+1] === this.MapTypes.WATER) {
+                        x = x_ + 0.33;
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return zones;
+    }
+
+    findWalkingDog() {
+        const zones = [];
+        for (let y = 1; y < this.maze.length-1; y+=2) {
+            for (let x = 1; x < this.maze[y].length-1; x+=2) {
+                let count = 0;
+                if (this.maze[y][x+1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y][x] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y][x-1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y+1][x+1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y+1][x] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y+1][x-1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y-1][x+1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y-1][x-1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y-1][x-1] === this.MapTypes.LAND) { count++; }
+                if (this.maze[y][x] === this.MapTypes.LAND && count > 4) {
+                    console.log(x);
+                    console.log(y);
+                    console.log('hhh');
+                    zones.push({ x, y });
+                }
+            }
+        }
+        return zones;
     }
 
     findReward() {

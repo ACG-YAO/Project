@@ -1,15 +1,18 @@
-import { Protagonist } from './Protagonist.js';
+import { Obstacles } from './Obstacles.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as THREE from 'three';
-export class Ghost extends Protagonist {
+export class ReversedShibaInu extends Obstacles {
     constructor(scene, onLoadCallback) {
         super();
+        this.mixer = null;
+        this.clock = new THREE.Clock();
         this.move_speed = 0.06;
         this.rotate_speed = 0.015;
         this.promise = new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
-            loader.load('Models/Enemy1.glb', (gltf) => {
-                this.initialize(gltf, scene, onLoadCallback, 0.5, 0.5, 0.5);
+            loader.load('Models/ShibaInu.glb', (gltf) => {
+                this.initialize(gltf, scene, onLoadCallback, 0.38, 0.38, 0.38);
+                gltf.scene.rotation.y = Math.PI / 2; 
                 this.setupLayers(gltf);
                 this.mixer = new THREE.AnimationMixer(gltf.scene);
                 this.actions = [];
@@ -35,68 +38,17 @@ export class Ghost extends Protagonist {
         });
     }
 
-    KeyDownHandler(event) {
-        switch (event.code) {
-        case this.control_forward:
-            this.moveForward = true;
-            this.actions[7].play();
-            break;
-        case this.control_backward:
-            this.moveBackward = true;
-            this.actions[7].play();
-            break;
-        case this.control_left:
-            this.turnLeft = true;
-            break;
-        case this.control_right:
-            this.turnRight = true;
-            break;
-        }   
-     }
-
-    KeyUpHandler(event) {
-        switch (event.code) {
-        case this.control_forward:
-            this.moveForward = false;
-            break;
-        case this.control_backward:
-            this.moveBackward = false;
-            break;
-        case this.control_left:
-            this.turnLeft = false;
-            break;
-        case this.control_right:
-            this.turnRight = false;
-            break;
-        }
-        if (this.moveForward === false && this.moveBackward === false && this.turnLeft === false && this.turnRight === false) {
-            this.actions.forEach((action) => action.stop());
-            this.actions[2].play();
-        }
-    }
-
-    animate(scene, objectsList) {
-        if (this.boundingBoxHelper === null)
-            this.check(scene);
-        let rewardDetected = this.checkCollision(scene, objectsList);
-        if (rewardDetected === true ){
-            this.switchAnimation(3);
-            setTimeout(() => {
-                this.switchAnimation(2);
-            }, 1000);
-        }
-        this.handleMovement(objectsList);
-        this.updateBoundingBoxHelper();
+    animate() {
         if (this.mixer) {
             const delta = this.clock.getDelta();
             this.mixer.update(delta);
         }
-        return rewardDetected;
+        return true;
     }
 
     setupLayers(gltf) {
         
-        const preserveLayers = new Set(['Ghost_Skull_1']);
+        const preserveLayers = new Set(['Dog']);
         const preservedObjects = new Set();
         
         gltf.scene.traverse((child) => {
@@ -113,7 +65,5 @@ export class Ghost extends Protagonist {
             }
         });
     }
-
 }
-
-export default Ghost;
+export default ReversedShibaInu;

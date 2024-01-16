@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Ghost, Pumpkin, Fence, ReversedFence } from './Object';
+import { Ghost, Pumpkin, Fence, ReversedFence, ShibaInu, ReversedShibaInu } from './Object';
 import { RandomGeneratedMap } from './Map';
 import { SwitchableCamera } from './Camera';
 import { TimeStamp, LoseIndicator, WinIndicator } from './utils';
@@ -74,6 +74,8 @@ export class Game {
         this.map.setFence(Fence);
         this.map.setReversedFence(ReversedFence);
         this.map.setReward(Pumpkin);
+        this.map.setDog(ShibaInu);
+        this.map.setReversedDog(ReversedShibaInu);
         this.map.initialize();
 
         this.sky = new Sky();
@@ -204,6 +206,7 @@ export class Game {
             for (let i = 0; i < fixedObjects.length; i++) {
                 fixedObjects[i].updateBoundary();
             }
+            let dogs = this.map.getDogs();
             if (this.ghost.animate(this.map.scene, fixedObjects)) {
                 this.score++;
                 let game_bar = document.getElementById('game');
@@ -231,6 +234,9 @@ export class Game {
             this.camera.animate(this.ghost.object3D.position, this.ghost.object3D.rotation);
             for (let i = 0; i < fixedObjects.length; i++) {
                 fixedObjects[i].animate();
+            }
+            for (let i = 0; i < dogs.length; i++) {
+                dogs[i].animate();
             }
             for (let i = 0; i < this.map.waterObjectsList.length; i++) {
                 this.map.waterObjectsList[i].material.uniforms['time'].value += 1 / 120;
