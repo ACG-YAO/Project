@@ -117,8 +117,12 @@ export class Game {
         this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
         this.map.scene.add(this.light);
         this.dirLight = new THREE.DirectionalLight(0xffffff, 1);
-        this.dirLight.position.set(1, 1, 1).normalize();
+        let position = this.sunSphere.position.clone().normalize();
+        this.dirLight.position.set(position.x, position.y, position.z);
         this.map.scene.add(this.dirLight);
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 2);
+        this.map.scene.add(this.ambientLight);
+        this.camera.setComposer(this.renderer, this.map.scene,0.3);
         this.playing = true;
         this.resetController();
     }
@@ -241,7 +245,7 @@ export class Game {
             for (let i = 0; i < this.map.waterObjectsList.length; i++) {
                 this.map.waterObjectsList[i].material.uniforms['time'].value += 1 / 120;
             }
-            this.renderer.render(this.map.scene, this.camera.getCamera());
+            this.camera.getComposer().render();
         }
         this.requestID = requestAnimationFrame(this.animate);
     }

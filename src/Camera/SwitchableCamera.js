@@ -1,8 +1,8 @@
 import { Group } from 'three';
-import * as THREE from 'three';
 import { FirstPersonPerspectiveCamera } from './FirstPersonPerspectiveCamera.js';
 import { ThirdPersonPerspectiveCamera } from './ThirdPersonPerspectiveCamera.js';
 import { TopDownCamera } from './TopDownCamera.js';
+import { RenderComposer } from '../utils';
 
 export class SwitchableCamera extends Group {
     constructor(fov, aspect, near, far, offset, position) {
@@ -28,6 +28,21 @@ export class SwitchableCamera extends Group {
             return this.firstPersonPerspectiveCamera.camera;
         else
             return this.thirdPersonPerspectiveCamera.camera;
+    }
+
+    setComposer(renderer, scene, mixRatio) {
+        this.firstPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.firstPersonPerspectiveCamera.camera, mixRatio);
+        this.thirdPersonPerspectiveComposer = new RenderComposer(renderer, scene, this.thirdPersonPerspectiveCamera.camera, mixRatio);
+        this.topDownComposer = new RenderComposer(renderer, scene, this.topDownCamera.camera, mixRatio);
+    }
+
+    getComposer() {
+        if (this.is_map)
+            return this.topDownComposer;
+        else if (this.is_first)
+            return this.firstPersonPerspectiveComposer;
+        else
+            return this.thirdPersonPerspectiveComposer;
     }
 
     animate(position, rotation) {
